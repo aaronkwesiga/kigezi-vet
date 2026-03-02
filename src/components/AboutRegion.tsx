@@ -51,7 +51,7 @@ const AboutRegion = () => {
 
                         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-1">
                             {highlights.map((item, idx) => (
-                                <div key={idx} className="flex gap-6 group">
+                                <div key={idx} className="flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left gap-6 group">
                                     <div className="flex h-12 w-12 md:h-14 md:w-14 shrink-0 items-center justify-center rounded-xl md:rounded-2xl bg-muted/60 border border-foreground/5 text-primary shadow-sm transition-transform group-hover:scale-105">
                                         <item.icon className="h-6 w-6 md:h-7 md:w-7" />
                                     </div>

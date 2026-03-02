@@ -78,7 +78,7 @@ const Contact = () => {
           <div className="lg:col-span-2 space-y-6">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
               {contactOptions.map((item, i) => {
-                const commonClasses = `bg-card group flex items-start gap-5 rounded-2xl md:rounded-[2rem] p-5 md:p-6 transition-all hover:-translate-y-1 hover:border-primary/20 shadow-xl border border-foreground/5 ${item.href ? 'cursor-pointer' : ''}`;
+                const commonClasses = `bg-card group flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left gap-5 rounded-2xl md:rounded-[2rem] p-5 md:p-6 transition-all hover:-translate-y-1 hover:border-primary/20 shadow-xl border border-foreground/5 ${item.href ? 'cursor-pointer' : ''}`;
                 return (
                   <div
                     key={i}
@@ -109,7 +109,7 @@ const Contact = () => {
                           )}
                         </div>
                       ) : (
-                        <p className="text-xs md:text-sm font-medium text-foreground/40 leading-tight">{item.detail}</p>
+                        <p className="text-xs md:text-sm font-medium text-foreground/40 leading-tight mx-auto sm:mx-0">{item.detail}</p>
                       )}
 
                       {item.href && (

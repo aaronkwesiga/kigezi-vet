@@ -10,8 +10,8 @@ const Footer = () => {
       <div className="absolute top-0 left-0 h-[400px] w-[400px] md:h-[600px] md:w-[600px] bg-primary/2 blur-[100px] md:blur-[150px] pointer-events-none" />
 
       <div className="container mx-auto relative z-10">
-        <div className="grid gap-12 md:gap-16 lg:gap-24 md:grid-cols-3">
-          <div className="space-y-6 md:space-y-8">
+        <div className="grid gap-12 md:gap-16 lg:gap-24 md:grid-cols-3 text-center md:text-left">
+          <div className="space-y-6 md:space-y-8 flex flex-col items-center md:items-start">
             <div className="flex items-center gap-4 md:gap-6 mb-8 md:mb-10">
               <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-primary flex items-center justify-center font-bold text-primary-foreground text-xl md:text-2xl shadow-sm border border-white/10">K</div>
               <h3 className="font-display text-lg md:text-xl font-bold text-foreground uppercase tracking-tight leading-none">Kigezi Vet Drugshop</h3>
@@ -22,7 +22,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="space-y-6 md:space-y-8">
+          <div className="space-y-6 md:space-y-8 flex flex-col items-center md:items-start">
             <h4 className="mb-8 md:mb-10 font-bold text-[10px] md:text-xs text-primary/40 uppercase tracking-[0.2em]">{t('contact.hours', lang)}</h4>
             <div className="flex items-start gap-4 md:gap-6 text-sm md:text-base font-medium text-foreground/42 leading-relaxed group">
               <Clock className="mt-1 h-5 w-5 md:h-6 md:w-6 shrink-0 text-primary/40 group-hover:text-primary transition-all" />
@@ -30,7 +30,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="space-y-6 md:space-y-8">
+          <div className="space-y-6 md:space-y-8 flex flex-col items-center md:items-start">
             <h4 className="mb-8 md:mb-10 font-bold text-[10px] md:text-xs text-primary/40 uppercase tracking-[0.2em]">Global Uplink</h4>
             <div className="flex items-start gap-4 md:gap-6 text-sm md:text-base font-medium text-foreground/42 leading-relaxed group">
               <Phone className="mt-1 h-5 w-5 md:h-6 md:w-6 shrink-0 text-secondary/40 group-hover:text-secondary transition-all" />

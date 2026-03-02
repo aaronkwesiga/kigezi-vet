@@ -53,13 +53,13 @@ const ServiceCards = () => {
           {services.map((service, idx) => (
             <div
               key={idx}
-              className="group relative flex flex-col rounded-[2rem] md:rounded-[3rem] bg-card border border-foreground/5 p-8 md:p-10 transition-all hover:-translate-y-2 hover:border-primary/20 shadow-xl overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-1000"
+              className="group relative flex flex-col items-center text-center md:items-start md:text-left rounded-[2rem] md:rounded-[3rem] bg-card border border-foreground/5 p-8 md:p-10 transition-all hover:-translate-y-2 hover:border-primary/20 shadow-xl overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-1000"
               style={{ animationDelay: `${idx * 150}ms` }}
             >
               {/* Hover accent */}
               <div className="absolute top-0 right-0 h-32 w-32 md:h-40 md:w-40 bg-primary/5 rounded-full blur-[60px] md:blur-[80px] -mr-16 md:-mr-20 -mt-16 md:-mt-20 opacity-0 group-hover:opacity-100 transition-opacity" />
 
-              <div className="mb-8 md:mb-10 flex items-center justify-between">
+              <div className="mb-8 md:mb-10 flex items-center justify-between w-full">
                 <div className={`flex h-14 w-14 md:h-16 md:w-16 items-center justify-center rounded-xl md:rounded-2xl bg-muted/50 border border-foreground/5 shadow-sm transition-all group-hover:scale-110 ${service.color}`}>
                   <service.icon className="h-6 w-6 md:h-8 md:w-8" />
                 </div>
