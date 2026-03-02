@@ -6,20 +6,13 @@
     <title>Kigezi Vet</title>
     <script type="text/javascript">
         // Single Page Apps for GitHub Pages
-        // https://github.com/rafgraph/spa-github-pages
-        // This script checks to see if a redirect is present in the query string,
-        // converts it back into a correct url and adds it to the
-        // browser's history using window.history.replaceState(...),
-        // which causes the browser to refresh the page without losing
-        // the original url.
-        var pathSegmentToKeep = 0;
-
+        // This script redirects a 404 to the index page with the path as a hash
         var l = window.location;
         l.replace(
             l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-            l.pathname.split('/').slice(0, 1 + pathSegmentToKeep).join('/') + '/?p=/' +
-            l.pathname.split('/').slice(1 + pathSegmentToKeep).join('/').replace(/&/g, '~and~') +
-            (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+            l.pathname.split('/').slice(0, 1).join('/') + '/#' +
+            l.pathname.split('/').slice(1).join('/') +
+            (l.search ? l.search : '') +
             l.hash
         );
     </script>
