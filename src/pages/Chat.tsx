@@ -440,10 +440,10 @@ const Chat = () => {
 
         <div className="w-full max-w-3xl text-center relative z-10 animate-in fade-in zoom-in duration-1000">
           <Badge className="mb-6 md:mb-10 px-8 md:px-12 py-2 md:py-3 bg-primary text-primary-foreground border-none font-black uppercase tracking-[0.4em] text-[9px] md:text-xs shadow-lg">Signal Interface</Badge>
-          <h1 className="text-3xl md:text-6xl lg:text-7xl font-black text-foreground uppercase tracking-tighter leading-none mb-10 drop-shadow-sm">Direct <span className="text-primary">Uplink</span></h1>
-          <div className="glass rounded-[2rem] md:rounded-[4rem] p-8 md:p-14 shadow-xl">
+          <h1 className="text-3xl md:text-6xl lg:text-7xl font-black text-foreground uppercase tracking-tighter leading-none mb-6 md:mb-10 drop-shadow-sm">Direct <span className="text-primary">Uplink</span></h1>
+          <div className="glass rounded-[1.5rem] md:rounded-[4rem] p-6 md:p-14 shadow-xl">
             {/* Farmer identity card with avatar upload */}
-            <div className="flex flex-col md:flex-row items-center gap-5 md:gap-8 mb-10 md:mb-14 p-6 md:p-10 bg-muted/30 rounded-2xl md:rounded-[3rem] border-2 md:border-4 border-foreground/5">
+            <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 mb-8 md:mb-14 p-4 md:p-10 bg-muted/30 rounded-xl md:rounded-[3rem] border-2 md:border-4 border-foreground/5">
               {/* Clickable avatar */}
               <div className="relative group flex-shrink-0">
                 <input
@@ -478,12 +478,12 @@ const Chat = () => {
               </div>
 
               <div className="text-center md:text-left">
-                <p className="text-2xl md:text-4xl lg:text-5xl font-black text-foreground uppercase tracking-tighter leading-none mb-1.5">{visitorName}</p>
-                <p className="text-[9px] md:text-base font-black text-primary/60 uppercase tracking-[0.3em]">{user.email}</p>
+                <p className="text-2xl md:text-5xl font-black text-foreground uppercase tracking-tighter leading-none mb-1">{visitorName}</p>
+                <p className="text-[10px] md:text-base font-black text-primary/60 uppercase tracking-[0.3em]">{user.email}</p>
                 <p className="text-[9px] md:text-xs text-foreground/30 font-bold uppercase tracking-[0.2em] mt-2">Click photo to upload your picture</p>
               </div>
             </div>
-            <Button onClick={startChat} className="w-full h-16 md:h-24 rounded-2xl md:rounded-[3rem] bg-secondary hover:brightness-110 text-white font-black text-xl md:text-3xl uppercase tracking-[0.3em] shadow-lg transition-all border-b-6 md:border-b-[12px] border-black/20 active:translate-y-0.5">Initialize Chat</Button>
+            <Button onClick={startChat} className="w-full h-14 md:h-24 rounded-xl md:rounded-[3rem] bg-secondary hover:brightness-110 text-white font-black text-lg md:text-3xl uppercase tracking-[0.3em] shadow-lg transition-all border-b-4 md:border-b-[12px] border-black/20 active:translate-y-0.5">Initialize Chat</Button>
           </div>
         </div>
       </div>
@@ -495,7 +495,7 @@ const Chat = () => {
       <ConsultationBackground />
       <div className="absolute inset-0 z-[1] bg-black/50 pointer-events-none" />
 
-      <div className="relative z-10 w-full max-w-4xl h-[85vh] md:h-[80vh] flex flex-col bg-[#efeae2] dark:bg-zinc-900 rounded-3xl md:rounded-[3rem] overflow-hidden shadow-2xl border-4 md:border-8 border-primary/20 transition-all duration-500">
+      <div className="relative z-10 w-full max-w-4xl h-[85dvh] md:h-[80vh] flex flex-col bg-[#efeae2] dark:bg-zinc-900 rounded-2xl md:rounded-[3rem] overflow-hidden shadow-2xl border-2 md:border-8 border-primary/20 transition-all duration-500">
         {/* WhatsApp Background Pattern Overlay */}
         <div className="absolute inset-0 opacity-[0.05] dark:opacity-[0.03] pointer-events-none"
           style={{ backgroundImage: 'url("https://wweb.dev/assets/whatsapp-chat-bg.png")', backgroundSize: '400px' }} />

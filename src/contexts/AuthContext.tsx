@@ -119,7 +119,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUserRole(null);
 
     // 3. Redirect to login right away (don't wait for Supabase)
-    window.location.replace('/login');
+    window.location.hash = '/login';
 
     // 4. Fire the Supabase signOut in background so the server session ends
     try {

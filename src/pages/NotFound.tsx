@@ -20,19 +20,19 @@ const NotFound = () => {
           <AlertTriangle className="h-16 w-16 text-white" />
         </div>
 
-        <h1 className="mb-6 font-display text-9xl font-black text-white tracking-widest leading-none drop-shadow-[0_15px_15px_rgba(0,0,0,1)] uppercase">
+        <h1 className="mb-6 font-display text-6xl md:text-9xl font-black text-white tracking-widest leading-none drop-shadow-[0_15px_15px_rgba(0,0,0,1)] uppercase">
           4<span className="text-red-600">0</span>4
         </h1>
 
         <div className="mx-auto h-2 w-48 bg-red-600 rounded-full mb-10 shadow-[0_0_20px_rgba(255,0,0,0.8)]" />
 
-        <p className="mb-20 text-4xl font-black text-white/50 uppercase tracking-tighter leading-none">
+        <p className="mb-10 md:mb-20 text-xl md:text-4xl font-black text-white/50 uppercase tracking-tighter leading-none">
           Signal Interrupted: <span className="text-white">Route Not Found</span>
         </p>
 
         <Link to="/">
-          <Button size="lg" className="h-32 px-16 gap-6 rounded-[3rem] bg-green-600 hover:bg-green-500 text-white font-black text-4xl uppercase tracking-[0.3em] shadow-[0_30px_80px_rgba(34,197,94,0.4)] transition-all border-b-[20px] border-green-800 hover:scale-105 active:scale-95">
-            <Zap className="h-10 w-10 fill-white" /> Recover Path
+          <Button size="lg" className="h-20 md:h-32 px-8 md:px-16 gap-4 md:gap-6 rounded-[2rem] md:rounded-[3rem] bg-green-600 hover:bg-green-500 text-white font-black text-xl md:text-4xl uppercase tracking-[0.3em] shadow-[0_30px_80px_rgba(34,197,94,0.4)] transition-all border-b-[10px] md:border-b-[20px] border-green-800 hover:scale-105 active:scale-95">
+            <Zap className="h-6 w-6 md:h-10 md:w-10 fill-white" /> Recover Path
           </Button>
         </Link>
 

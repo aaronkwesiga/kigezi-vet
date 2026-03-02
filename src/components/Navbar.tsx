@@ -72,7 +72,7 @@ const Navbar = () => {
 
   return (
     <nav className="sticky top-0 z-50 border-b border-primary/10 bg-background/80 backdrop-blur-xl transition-colors duration-500">
-      <div className="container mx-auto flex items-center justify-between px-6 py-3 md:py-4">
+      <div className="container mx-auto flex items-center justify-between px-4 md:px-6 py-3 md:py-4">
         <Link to="/" className="flex items-center gap-3 md:gap-4 group">
           <div className="flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-lg md:rounded-xl bg-primary shadow-sm transition-all group-hover:scale-105 border border-primary/10">
             <span className="font-display text-lg md:text-xl font-bold text-primary-foreground">K</span>

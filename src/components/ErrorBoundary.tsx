@@ -54,7 +54,7 @@ class ErrorBoundaryClass extends Component<Props & { lang: Language }, State> {
                                 </Button>
                                 <Button
                                     variant="outline"
-                                    onClick={() => window.location.href = '/'}
+                                    onClick={() => window.location.hash = '/'}
                                     className="h-14 rounded-2xl border-border/50 text-foreground font-black uppercase tracking-widest gap-2"
                                 >
                                     <Home className="h-5 w-5" />

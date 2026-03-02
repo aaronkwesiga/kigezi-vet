@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://<your-username>.github.io/kigezi-vet/",
+  "homepage": "https://aaronkwesiga.github.io/kigezi-vet/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
