@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* --- Modern Premium Light Mode --- */
+    --background: 210 20% 98%;
+    /* Slightly off-white for premium feel */
+    --foreground: 220 40% 2%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 40% 2%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 40% 2%;
+
+    --primary: 220 40% 2%;
+    --primary-foreground: 210 20% 98%;
+
+    --secondary: 142 76% 30%;
+    --secondary-foreground: 210 20% 98%;
+
+    --muted: 210 20% 94%;
+    --muted-foreground: 220 10% 40%;
+
+    --accent: 0 100% 45%;
+    --accent-foreground: 210 20% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 220 10% 90%;
+    --input: 220 10% 90%;
+    --ring: 220 40% 2%;
+
+    --radius: 1.25rem;
+
+    --sidebar-background: 210 20% 98%;
+    --sidebar-foreground: 220 40% 2%;
+    --sidebar-primary: 220 40% 2%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 20% 94%;
+    --sidebar-accent-foreground: 220 40% 2%;
+    --sidebar-border: 220 10% 90%;
+    --sidebar-ring: 220 40% 2%;
+
+    --chat-visitor: 142 76% 35%;
+    --chat-admin: 220 10% 94%;
+
+    --glass-background: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    /* Much softer border */
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  }
+
+  .dark {
+    /* --- Modern Premium Dark Mode --- */
+    --background: 220 40% 2%;
+    --foreground: 210 20% 98%;
+
+    --card: 220 40% 4%;
+    --card-foreground: 210 20% 98%;
+
+    --popover: 220 40% 4%;
+    --popover-foreground: 210 20% 98%;
+
+    --primary: 0 100% 50%;
+    --primary-foreground: 210 20% 98%;
+
+    --secondary: 142 76% 45%;
+    --secondary-foreground: 210 20% 98%;
+
+    --muted: 220 20% 12%;
+    --muted-foreground: 220 10% 60%;
+
+    --accent: 0 100% 50%;
+    --accent-foreground: 210 20% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 220 20% 15%;
+    --input: 220 20% 15%;
+    --ring: 0 100% 50%;
+
+    --sidebar-background: 220 40% 2%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 0 100% 50%;
+    --sidebar-primary-foreground: 210 20% 98%;
+    --sidebar-accent: 220 20% 10%;
+    --sidebar-accent-foreground: 210 20% 98%;
+    --sidebar-border: 220 20% 15%;
+    --sidebar-ring: 0 100% 50%;
+
+    --chat-visitor: 0 100% 50%;
+    --chat-admin: 220 20% 10%;
+
+    --glass-background: rgba(10, 10, 15, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+  }
+}
+
+@layer components {
+  .glass {
+    background: var(--glass-background);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    /* Thinner border */
+    box-shadow: var(--glass-shadow);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground transition-colors duration-500 font-sans tracking-tight;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display tracking-tight leading-tight;
+  }
+}
+
+@layer utilities {
+  .text-gradient-vibrant {
+    background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--primary)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% auto;
+    animation: textShine 4s linear infinite;
+  }
+
+  @keyframes textShine {
+    to {
+      background-position: 200% center;
+    }
+  }
+
+  .gradient-electric {
+    background: linear-gradient(135deg, hsla(var(--primary), 0.1), hsla(var(--background), 0.8));
+  }
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 8s infinite;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 12px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary));
+  border: 3px solid hsl(var(--background));
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--accent));
+}
