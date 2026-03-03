@@ -76,50 +76,60 @@ const AIChatAssistant = () => {
             return;
         }
 
-        try {
-            console.log('Using API Key starts with:', import.meta.env.VITE_GEMINI_API_KEY?.substring(0, 5));
+        const modelsToTry = ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-pro"];
+        let lastError: any = null;
+        let success = false;
 
-            const modelName = "gemini-1.5-flash"; // Standard name
-            const model = genAI.getGenerativeModel({
-                model: modelName,
-                systemInstruction: `You are an expert veterinary and agricultural assistant for the Kigezi Vet platform in Uganda. 
-        Your goal is to help farmers in the Kigezi region with livestock health, crop management, and general veterinary advice.
-        Provide practical, scientifically sound, and localized advice. 
-        If a situation sounds critical, always recommend contacting a professional veterinarian through the Kigezi Vet 'Contact' or 'Chat' pages.
-        Keep your responses concise and helpful. 
-        You can communicate in English and Rukiga. 
-        Current language setting: ${lang}.`
-            });
+        for (const modelName of modelsToTry) {
+            if (success) break;
 
-            const history = messages.length > 1
-                ? messages.map(m => ({
-                    role: m.role,
-                    parts: [{ text: m.content }],
-                }))
-                : [];
+            try {
+                console.log(`Attempting to use AI model: ${modelName}`);
+                const model = genAI.getGenerativeModel({
+                    model: modelName,
+                    systemInstruction: `You are an expert veterinary and agricultural assistant for the Kigezi Vet platform in Uganda. 
+            Your goal is to help farmers in the Kigezi region with livestock health, crop management, and general veterinary advice.
+            Provide practical, scientifically sound, and localized advice. 
+            If a situation sounds critical, always recommend contacting a professional veterinarian through the Kigezi Vet 'Contact' or 'Chat' pages.
+            Keep your responses concise and helpful. 
+            You can communicate in English and Rukiga. 
+            Current language setting: ${lang}.`
+                });
 
-            const chat = model.startChat({ history });
+                const history = messages.length > 1
+                    ? messages.map(m => ({
+                        role: m.role,
+                        parts: [{ text: m.content }],
+                    }))
+                    : [];
 
-            const result = await chat.sendMessage(userMessage);
-            const response = await result.response;
-            const text = response.text();
+                const chat = model.startChat({ history });
+                const result = await chat.sendMessage(userMessage);
+                const response = await result.response;
+                const text = response.text();
 
-            setMessages(prev => [...prev, { role: 'model', content: text }]);
-        } catch (error: any) {
-            console.error('AI Chat Error Trace:', error);
-
-            // diagnostic: if 404, we might be using the wrong model name for this key/region
-            if (error?.message?.includes('404') || error?.message?.includes('not found')) {
-                console.warn('Model not found. This key might only support legacy names. Trying a different model name internally next time or check ListModels.');
+                setMessages(prev => [...prev, { role: 'model', content: text }]);
+                success = true;
+                console.log(`Successfully connected using model: ${modelName}`);
+            } catch (error: any) {
+                lastError = error;
+                console.error(`Error with model ${modelName}:`, error);
+                if (error?.message?.includes('404') || error?.message?.includes('not found')) {
+                    console.warn(`Model ${modelName} not found, trying next option...`);
+                    continue;
+                }
+                break; // If it's not a 404, it might be a key or quota issue, so stop.
             }
+        }
 
+        if (!success) {
             let errorMessage = "I'm sorry, I'm having trouble connecting right now. Please try again later.";
 
-            if (error?.message?.includes('404') || error?.message?.includes('not found')) {
-                errorMessage = "The AI model requested was not found. This usually happens if the API key is new or restricted to certain models. Please check Google AI Studio.";
-            } else if (error?.message?.includes('API key not valid')) {
+            if (lastError?.message?.includes('404') || lastError?.message?.includes('not found')) {
+                errorMessage = "AI models unavailable. This usually happens if the API key is restricted or new. Please verify it in Google AI Studio.";
+            } else if (lastError?.message?.includes('API key not valid')) {
                 errorMessage = "The AI API key appears to be invalid. Please check your .env file.";
-            } else if (error?.message?.includes('quota')) {
+            } else if (lastError?.message?.includes('quota')) {
                 errorMessage = "AI usage quota exceeded. Please try again later.";
             }
 
@@ -127,9 +137,9 @@ const AIChatAssistant = () => {
                 role: 'model',
                 content: errorMessage
             }]);
-        } finally {
-            setIsLoading(false);
         }
+
+        setIsLoading(false);
 
 
     };

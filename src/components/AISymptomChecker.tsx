@@ -61,42 +61,67 @@ const AISymptomChecker = () => {
         }
 
         setLoading(true);
-        try {
-            const genAI = getGenAI();
-            if (!genAI) throw new Error("API key missing");
+        const genAI = getGenAI();
+        if (!genAI) {
+            toast({
+                title: "Configuration Error",
+                description: "AI key is missing. Please check your .env file.",
+                variant: "destructive"
+            });
+            setLoading(false);
+            return;
+        }
 
-            console.log('Symptom Checker: Using API Key starts with:', import.meta.env.VITE_GEMINI_API_KEY?.substring(0, 5));
+        const modelsToTry = ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-pro"];
+        let lastError: any = null;
+        let success = false;
 
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-            const prompt = `As a veterinary assistant, analyze these symptoms for a ${animalType}:
-      Symptoms: ${selectedSymptoms.join(', ')}
-      Additional details: ${additionalInfo}
-      
-      Provide:
-      1. Potential conditions (disclaimer that this is not a final diagnosis).
-      2. Immediate steps the farmer can take.
-      3. Urgency level (Normal, High, Emergency).
-      4. Suggest contacting a vet if appropriate.
-      
-      Format with clear headings and bullet points.`;
+        for (const modelName of modelsToTry) {
+            if (success) break;
 
-            const result = await model.generateContent(prompt);
-            const response = await result.response;
-            setPrediction(response.text());
-        } catch (error: any) {
-            console.error('Symptom Checker Error Trace:', error);
+            try {
+                console.log(`Symptom Checker: Attempting model ${modelName}`);
+                const model = genAI.getGenerativeModel({ model: modelName });
+                const prompt = `As a veterinary assistant, analyze these symptoms for a ${animalType}:
+        Symptoms: ${selectedSymptoms.join(', ')}
+        Additional details: ${additionalInfo}
+        
+        Provide:
+        1. Potential conditions (disclaimer that this is not a final diagnosis).
+        2. Immediate steps the farmer can take.
+        3. Urgency level (Normal, High, Emergency).
+        4. Suggest contacting a vet if appropriate.
+        
+        Format with clear headings and bullet points.`;
+
+                const result = await model.generateContent(prompt);
+                const response = await result.response;
+                setPrediction(response.text());
+                success = true;
+                console.log(`Symptom Checker: Success with model ${modelName}`);
+            } catch (error: any) {
+                lastError = error;
+                console.error(`Symptom Checker error with ${modelName}:`, error);
+                if (error?.message?.includes('404') || error?.message?.includes('not found')) {
+                    continue;
+                }
+                break;
+            }
+        }
+
+        if (!success) {
             let msg = "Failed to get AI analysis. Please try again.";
-            if (error?.message?.includes('not found') || error?.message?.includes('404')) {
-                msg = "The AI model (gemini-1.5-flash) was not found. This key might be restricted or new. Please verify it in Google AI Studio.";
+            if (lastError?.message?.includes('not found') || lastError?.message?.includes('404')) {
+                msg = "AI models currently unavailable for this key. Please verify model access in Google AI Studio.";
             }
             toast({
                 title: "AI Service Error",
                 description: msg,
                 variant: "destructive"
             });
-        } finally {
-            setLoading(false);
         }
+
+        setLoading(false);
     };
 
     const reset = () => {
