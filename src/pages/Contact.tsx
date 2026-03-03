@@ -76,9 +76,9 @@ const Contact = () => {
         <div className="grid gap-10 lg:grid-cols-5 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
           {/* Contact Info & Map */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-1">
               {contactOptions.map((item, i) => {
-                const commonClasses = `bg-card group flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left gap-5 rounded-2xl md:rounded-[2rem] p-5 md:p-6 transition-all hover:-translate-y-1 hover:border-primary/20 shadow-xl border border-foreground/5 ${item.href ? 'cursor-pointer' : ''}`;
+                const commonClasses = `bg-card w-full group flex flex-col items-center text-center md:flex-row md:items-start md:text-left gap-5 rounded-2xl md:rounded-[2rem] p-5 md:p-6 transition-all hover:-translate-y-1 hover:border-primary/20 shadow-xl border border-foreground/5 ${item.href ? 'cursor-pointer' : ''}`;
                 return (
                   <div
                     key={i}
@@ -109,13 +109,15 @@ const Contact = () => {
                           )}
                         </div>
                       ) : (
-                        <p className="text-xs md:text-sm font-medium text-foreground/40 leading-tight mx-auto sm:mx-0">{item.detail}</p>
+                        <p className="text-xs md:text-sm font-medium text-foreground/40 leading-tight mx-auto md:mx-0">{item.detail}</p>
+
                       )}
 
                       {item.href && (
-                        <span className="mt-3 inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span className="mt-3 inline-flex items-center justify-center md:justify-start gap-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-primary opacity-0 group-hover:opacity-100 transition-opacity">
                           Open Protocol <ChevronRight className="h-3 w-3" />
                         </span>
+
                       )}
                     </div>
                   </div>
@@ -156,7 +158,8 @@ const Contact = () => {
               <div className="space-y-6 md:space-y-8">
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-2 md:space-y-3">
-                    <label className="ml-4 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-primary/40">Identity</label>
+                    <label className="text-center block md:text-left md:ml-4 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-primary/40">Identity</label>
+
                     <Input
                       placeholder="NAME"
                       required
@@ -166,7 +169,8 @@ const Contact = () => {
                     />
                   </div>
                   <div className="space-y-2 md:space-y-3">
-                    <label className="ml-4 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-primary/40">Return Signal</label>
+                    <label className="text-center block md:text-left md:ml-4 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-primary/40">Return Signal</label>
+
                     <Input
                       type="email"
                       placeholder="EMAIL"
@@ -179,7 +183,8 @@ const Contact = () => {
                 </div>
 
                 <div className="space-y-2 md:space-y-3">
-                  <label className="ml-4 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-secondary/40">Broadside Transmission</label>
+                  <label className="text-center block md:text-left md:ml-4 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-secondary/40">Broadside Transmission</label>
+
                   <Input
                     placeholder="PROTOCOL SUBJECT"
                     required
@@ -190,7 +195,8 @@ const Contact = () => {
                 </div>
 
                 <div className="space-y-2 md:space-y-3">
-                  <label className="ml-4 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-primary/40">Data Payload</label>
+                  <label className="text-center block md:text-left md:ml-4 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-primary/40">Data Payload</label>
+
                   <Textarea
                     placeholder="ENTER MESSAGE PROTOCOL..."
                     required
