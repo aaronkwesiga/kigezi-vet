@@ -65,8 +65,9 @@ const Navbar = () => {
     { to: '/', label: t('nav.home', lang) },
     { to: '/products', label: t('nav.products', lang) },
     { to: '/chat', label: t('nav.chat', lang) },
-    { to: '/ai-symptom-checker', label: 'AI Health Checker' },
+    { to: '/ai-symptom-checker', label: 'AI Health Checker', badge: 'NEW' },
     { to: '/contact', label: t('nav.contact', lang) },
+
 
   ];
 
@@ -97,10 +98,16 @@ const Navbar = () => {
               to={link.to}
               className={`text-[10px] md:text-xs lg:text-sm font-black uppercase tracking-[0.25em] transition-all hover:text-primary relative group/nav ${isActive(link.to)
                 ? 'text-primary scale-105 underline decoration-primary/30 decoration-2 underline-offset-8'
-                : 'text-foreground/60'
+                : link.to === '/ai-symptom-checker' ? 'text-primary/90' : 'text-foreground/60'
                 }`}
             >
               {link.label}
+              {(link as any).badge && (
+                <span className="ml-1 px-1 py-0.5 text-[7px] bg-primary text-white rounded font-bold animate-pulse">
+                  {(link as any).badge}
+                </span>
+              )}
+
               {link.to === '/chat' && unreadCount > 0 && (
                 <span className="absolute -top-2 -right-3 flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
@@ -205,10 +212,16 @@ const Navbar = () => {
               key={link.to}
               to={link.to}
               onClick={() => setMobileOpen(false)}
-              className="block text-2xl md:text-3xl font-bold uppercase tracking-tight text-foreground/30"
+              className={`block text-2xl md:text-3xl font-bold uppercase tracking-tight ${link.to === '/ai-symptom-checker' ? 'text-primary' : 'text-foreground/30'}`}
             >
               {link.label}
+              {(link as any).badge && (
+                <span className="ml-2 px-2 py-0.5 text-xs bg-primary text-white rounded align-middle">
+                  {(link as any).badge}
+                </span>
+              )}
             </Link>
+
           ))}
           {user && isAdmin && (
             <Link

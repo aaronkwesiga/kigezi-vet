@@ -72,7 +72,8 @@ const AISymptomChecker = () => {
             return;
         }
 
-        const modelsToTry = ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-pro"];
+        const modelsToTry = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-flash-latest", "gemini-pro-latest", "gemini-pro"];
+
         let lastError: any = null;
         let success = false;
 
@@ -110,15 +111,18 @@ const AISymptomChecker = () => {
         }
 
         if (!success) {
-            let msg = "Failed to get AI analysis. Please try again.";
+            let msg = "Failed to get AI analysis. ";
             if (lastError?.message?.includes('not found') || lastError?.message?.includes('404')) {
-                msg = "AI models currently unavailable for this key. Please verify model access in Google AI Studio.";
+                msg += "AI models currently unavailable for this key. Please verify model access in Google AI Studio.";
+            } else {
+                msg += `Error details: ${lastError?.message || 'Unknown'}`;
             }
             toast({
                 title: "AI Service Error",
                 description: msg,
                 variant: "destructive"
             });
+
         }
 
         setLoading(false);

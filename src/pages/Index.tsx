@@ -1,5 +1,6 @@
 import HeroSection from '@/components/HeroSection';
 import ServiceCards from '@/components/ServiceCards';
+import AIFeatures from '@/components/AIFeatures';
 import AboutRegion from '@/components/AboutRegion';
 
 const Index = () => {
@@ -8,10 +9,12 @@ const Index = () => {
       <div className="relative z-10">
         <HeroSection />
         <ServiceCards />
+        <AIFeatures />
         <AboutRegion />
       </div>
     </div>
   );
 };
+
 
 export default Index;

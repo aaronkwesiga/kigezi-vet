@@ -76,7 +76,8 @@ const AIChatAssistant = () => {
             return;
         }
 
-        const modelsToTry = ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-pro"];
+        const modelsToTry = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-flash-latest", "gemini-pro-latest", "gemini-pro"];
+
         let lastError: any = null;
         let success = false;
 
@@ -96,8 +97,10 @@ const AIChatAssistant = () => {
             Current language setting: ${lang}.`
                 });
 
-                const history = messages.length > 1
-                    ? messages.map(m => ({
+                // Gemini requires history to start with a 'user' message
+                const firstUserIndex = messages.findIndex(m => m.role === 'user');
+                const history = firstUserIndex !== -1
+                    ? messages.slice(firstUserIndex).map(m => ({
                         role: m.role,
                         parts: [{ text: m.content }],
                     }))
@@ -105,6 +108,7 @@ const AIChatAssistant = () => {
 
                 const chat = model.startChat({ history });
                 const result = await chat.sendMessage(userMessage);
+
                 const response = await result.response;
                 const text = response.text();
 
@@ -123,14 +127,16 @@ const AIChatAssistant = () => {
         }
 
         if (!success) {
-            let errorMessage = "I'm sorry, I'm having trouble connecting right now. Please try again later.";
+            let errorMessage = "I'm sorry, I'm having trouble connecting right now.";
 
             if (lastError?.message?.includes('404') || lastError?.message?.includes('not found')) {
-                errorMessage = "AI models unavailable. This usually happens if the API key is restricted or new. Please verify it in Google AI Studio.";
+                errorMessage += " AI models unavailable. This usually happens if the API key is restricted or new. Please verify it in Google AI Studio.";
             } else if (lastError?.message?.includes('API key not valid')) {
-                errorMessage = "The AI API key appears to be invalid. Please check your .env file.";
+                errorMessage += " The AI API key appears to be invalid. Please check your .env file.";
             } else if (lastError?.message?.includes('quota')) {
-                errorMessage = "AI usage quota exceeded. Please try again later.";
+                errorMessage += " AI usage quota exceeded. Please try again later.";
+            } else {
+                errorMessage += ` Details: ${lastError?.message || 'Unknown error'}`;
             }
 
             setMessages(prev => [...prev, {
@@ -139,18 +145,22 @@ const AIChatAssistant = () => {
             }]);
         }
 
+
         setIsLoading(false);
 
-
+        if (!success && !import.meta.env.VITE_GEMINI_API_KEY) {
+            console.error("Gemini API key is missing. For GitHub Pages deployment, ensure VITE_GEMINI_API_KEY is added to your repository's secrets or provided in the environment.");
+        }
     };
 
     if (!isOpen) {
         return (
             <Button
                 onClick={() => setIsOpen(true)}
-                className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-2xl hover:scale-110 transition-all z-[60] bg-primary group"
+                className="fixed bottom-6 right-6 h-14 md:h-16 w-auto px-4 md:w-16 rounded-full shadow-2xl hover:scale-110 transition-all z-[60] bg-primary group flex items-center gap-2"
             >
                 <Sparkles className="h-6 w-6 text-white group-hover:animate-pulse" />
+                <span className="text-white font-bold text-xs md:hidden uppercase tracking-widest whitespace-nowrap">Ask AI Assistant</span>
             </Button>
         );
     }
