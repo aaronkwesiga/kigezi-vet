@@ -9,9 +9,13 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { t } from '@/lib/i18n';
 import { useToast } from '@/components/ui/use-toast';
 
-// Initialize Gemini AI
 // NOTE: For a production app, the API key should be handled via a secure backend/edge function
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || '');
+const getGenAI = () => {
+    const key = import.meta.env.VITE_GEMINI_API_KEY;
+    if (!key) return null;
+    return new GoogleGenerativeAI(key);
+};
+
 
 interface Message {
     role: 'user' | 'model';
@@ -61,10 +65,20 @@ const AIChatAssistant = () => {
         setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
         setIsLoading(true);
 
+        const genAI = getGenAI();
+        if (!genAI) {
+            toast({
+                title: "Configuration Error",
+                description: "AI key is missing or invalid. Please check your settings.",
+                variant: "destructive"
+            });
+            setIsLoading(false);
+            return;
+        }
+
         try {
-            // Switching to gemini-1.5-pro to troubleshoot the 404 error with gemini-1.5-flash
             const model = genAI.getGenerativeModel({
-                model: "gemini-1.5-pro",
+                model: "gemini-1.5-flash",
                 systemInstruction: `You are an expert veterinary and agricultural assistant for the Kigezi Vet platform in Uganda. 
         Your goal is to help farmers in the Kigezi region with livestock health, crop management, and general veterinary advice.
         Provide practical, scientifically sound, and localized advice. 
@@ -90,15 +104,15 @@ const AIChatAssistant = () => {
 
             setMessages(prev => [...prev, { role: 'model', content: text }]);
         } catch (error: any) {
-            console.error('AI Chat Error:', error);
+            console.error('AI Chat Error Trace:', error);
             let errorMessage = "I'm sorry, I'm having trouble connecting right now. Please try again later.";
 
-            if (error?.message?.includes('API key not valid')) {
+            if (error?.message?.includes('404') || error?.message?.includes('not found')) {
+                errorMessage = "Model not found. This might be a regional restriction or API key issue. Please contact support.";
+            } else if (error?.message?.includes('API key not valid')) {
                 errorMessage = "The AI API key appears to be invalid. Please check your .env file.";
             } else if (error?.message?.includes('quota')) {
                 errorMessage = "AI usage quota exceeded. Please try again later.";
-            } else if (error?.message?.includes('environment')) {
-                errorMessage = "Configuration error. Please restart your dev server.";
             }
 
             setMessages(prev => [...prev, {
@@ -108,6 +122,7 @@ const AIChatAssistant = () => {
         } finally {
             setIsLoading(false);
         }
+
     };
 
     if (!isOpen) {

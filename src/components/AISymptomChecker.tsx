@@ -9,7 +9,12 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Stethoscope, AlertTriangle, CheckCircle2, ChevronRight, Loader2, RefreshCcw } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || '');
+const getGenAI = () => {
+    const key = import.meta.env.VITE_GEMINI_API_KEY;
+    if (!key) return null;
+    return new GoogleGenerativeAI(key);
+};
+
 
 const commonSymptoms = [
     { id: 'fever', label: 'Fever / High Temperature' },
@@ -57,7 +62,10 @@ const AISymptomChecker = () => {
 
         setLoading(true);
         try {
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+            const genAI = getGenAI();
+            if (!genAI) throw new Error("API key missing");
+
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
             const prompt = `As a veterinary assistant, analyze these symptoms for a ${animalType}:
       Symptoms: ${selectedSymptoms.join(', ')}
       Additional details: ${additionalInfo}
@@ -76,8 +84,8 @@ const AISymptomChecker = () => {
         } catch (error: any) {
             console.error('Symptom Checker Error:', error);
             let msg = "Failed to get AI analysis. Please try again.";
-            if (error?.message?.includes('not found')) {
-                msg = "The AI model was not found. This might be a temporary issue with the Gemini service or the API key region.";
+            if (error?.message?.includes('not found') || error?.message?.includes('404')) {
+                msg = "The AI model was not found. This might be a regional restriction or temporary service issue.";
             }
             toast({
                 title: "AI Service Error",
