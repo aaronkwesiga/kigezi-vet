@@ -59,24 +59,28 @@ const Contact = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background pt-24 pb-16 px-6 relative overflow-hidden transition-colors duration-500">
-      <div className="container mx-auto relative z-10 max-w-5xl">
-        <div className="mb-14 text-center animate-in fade-in slide-in-from-bottom-8 duration-1000">
+    <div className="min-h-screen bg-background pt-24 pb-16 relative overflow-x-hidden transition-colors duration-500 flex flex-col items-center">
+      {/* Dynamic Background Slideshow shifted to top for zero-interference */}
+      <DomesticAnimalsBackground />
+      <div className="absolute inset-0 z-0 bg-black/60 pointer-events-none" />
+
+      <div className="w-full max-w-5xl px-4 md:px-6 relative z-10 flex flex-col items-center mx-auto">
+        <div className="mb-14 text-center">
           <Badge className="mb-5 px-8 py-2 text-[10px] md:text-xs font-semibold uppercase tracking-[0.2em] bg-primary/5 text-primary border border-primary/20 shadow-sm backdrop-blur-md">
             {t('nav.contact', lang)}
           </Badge>
           <h1 className="mb-5 font-display text-4xl font-bold tracking-tight text-foreground md:text-6xl lg:text-7xl uppercase leading-none">
             {t('contact.title', lang)}
           </h1>
-          <p className="mx-auto max-w-xl text-lg font-medium text-foreground/40 md:text-xl leading-relaxed">
+          <p className="mx-auto max-w-xl text-lg font-medium text-foreground/42 md:text-xl leading-relaxed">
             {t('contact.subtitle', lang)}
           </p>
         </div>
 
-        <div className="grid gap-10 lg:grid-cols-5 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
+        <div className="flex flex-col lg:grid lg:grid-cols-5 gap-10 w-full items-center">
           {/* Contact Info & Map */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-1">
+          <div className="lg:col-span-2 space-y-6 w-full flex flex-col items-center">
+            <div className="flex flex-col md:grid md:grid-cols-2 lg:flex lg:flex-col lg:grid-cols-1 gap-4 w-full items-center">
               {contactOptions.map((item, i) => {
                 const commonClasses = `bg-card w-full group flex flex-col items-center text-center md:flex-row md:items-start md:text-left gap-5 rounded-2xl md:rounded-[2rem] p-5 md:p-6 transition-all hover:-translate-y-1 hover:border-primary/20 shadow-xl border border-foreground/5 ${item.href ? 'cursor-pointer' : ''}`;
                 return (
@@ -148,8 +152,8 @@ const Contact = () => {
             </div>
           </div>
 
-          <div className="lg:col-span-3">
-            <form onSubmit={handleSubmit} className="bg-card p-8 md:p-12 rounded-2xl md:rounded-[3rem] border border-foreground/5 shadow-2xl relative overflow-hidden">
+          <div className="lg:col-span-3 w-full">
+            <form onSubmit={handleSubmit} className="bg-card p-6 md:p-12 rounded-2xl md:rounded-[3rem] border border-foreground/5 shadow-2xl relative overflow-hidden w-full">
               <div className="mb-8 md:mb-12">
                 <h3 className="font-display text-2xl md:text-4xl font-bold text-foreground uppercase tracking-tight mb-3">Signal Input</h3>
                 <p className="text-xs md:text-sm font-medium text-foreground/40 uppercase tracking-widest">Transmit detailed request below</p>
@@ -223,7 +227,7 @@ const Contact = () => {
         </div>
 
         {/* Global Connection Footprint */}
-        <div className="mt-24 md:mt-32 rounded-[3.5rem] md:rounded-[5rem] bg-primary p-10 md:p-20 text-center shadow-2xl relative overflow-hidden transition-all hover:scale-[1.01]">
+        <div className="mt-24 md:mt-32 rounded-[2.5rem] md:rounded-[5rem] bg-primary p-6 md:p-20 text-center shadow-2xl relative overflow-hidden transition-all hover:scale-[1.01] w-full mx-auto">
           <div className="absolute inset-0 bg-white opacity-5 pointer-events-none" />
           <div className="relative z-10">
             <h3 className="mb-6 text-2xl md:text-4xl lg:text-5xl font-bold text-primary-foreground uppercase tracking-tight leading-none">Connect with our community</h3>
@@ -259,11 +263,10 @@ const Contact = () => {
         </div>
       </div>
 
-      {/* Dynamic Background Slideshow shifted to end for zero-interference */}
-      <DomesticAnimalsBackground />
-      <div className="absolute inset-0 z-0 bg-black/60 pointer-events-none" />
     </div>
   );
 };
+
+
 
 export default Contact;
