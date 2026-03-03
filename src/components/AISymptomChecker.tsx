@@ -57,7 +57,7 @@ const AISymptomChecker = () => {
 
         setLoading(true);
         try {
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
             const prompt = `As a veterinary assistant, analyze these symptoms for a ${animalType}:
       Symptoms: ${selectedSymptoms.join(', ')}
       Additional details: ${additionalInfo}
@@ -73,11 +73,15 @@ const AISymptomChecker = () => {
             const result = await model.generateContent(prompt);
             const response = await result.response;
             setPrediction(response.text());
-        } catch (error) {
+        } catch (error: any) {
             console.error('Symptom Checker Error:', error);
+            let msg = "Failed to get AI analysis. Please try again.";
+            if (error?.message?.includes('not found')) {
+                msg = "The AI model was not found. This might be a temporary issue with the Gemini service or the API key region.";
+            }
             toast({
-                title: "Error",
-                description: "Failed to get AI analysis. Please try again.",
+                title: "AI Service Error",
+                description: msg,
                 variant: "destructive"
             });
         } finally {
@@ -129,8 +133,8 @@ const AISymptomChecker = () => {
                                     <div
                                         key={symptom.id}
                                         className={`flex items-center space-x-3 p-4 rounded-xl border transition-all cursor-pointer ${selectedSymptoms.includes(symptom.id)
-                                                ? 'border-primary bg-primary/10'
-                                                : 'border-muted-foreground/10 hover:border-primary/30'
+                                            ? 'border-primary bg-primary/10'
+                                            : 'border-muted-foreground/10 hover:border-primary/30'
                                             }`}
                                         onClick={() => toggleSymptom(symptom.id)}
                                     >

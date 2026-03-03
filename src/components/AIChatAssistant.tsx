@@ -62,8 +62,9 @@ const AIChatAssistant = () => {
         setIsLoading(true);
 
         try {
+            // Switching to gemini-1.5-pro to troubleshoot the 404 error with gemini-1.5-flash
             const model = genAI.getGenerativeModel({
-                model: "gemini-1.5-flash",
+                model: "gemini-1.5-pro",
                 systemInstruction: `You are an expert veterinary and agricultural assistant for the Kigezi Vet platform in Uganda. 
         Your goal is to help farmers in the Kigezi region with livestock health, crop management, and general veterinary advice.
         Provide practical, scientifically sound, and localized advice. 
