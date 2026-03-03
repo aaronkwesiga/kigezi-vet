@@ -77,8 +77,11 @@ const AIChatAssistant = () => {
         }
 
         try {
+            console.log('Using API Key starts with:', import.meta.env.VITE_GEMINI_API_KEY?.substring(0, 5));
+
+            const modelName = "gemini-1.5-flash"; // Standard name
             const model = genAI.getGenerativeModel({
-                model: "gemini-1.5-flash",
+                model: modelName,
                 systemInstruction: `You are an expert veterinary and agricultural assistant for the Kigezi Vet platform in Uganda. 
         Your goal is to help farmers in the Kigezi region with livestock health, crop management, and general veterinary advice.
         Provide practical, scientifically sound, and localized advice. 
@@ -88,13 +91,12 @@ const AIChatAssistant = () => {
         Current language setting: ${lang}.`
             });
 
-            // Filtering history to ensure it's valid for Gemini (must not start with model/assistant in some cases)
             const history = messages.length > 1
                 ? messages.map(m => ({
                     role: m.role,
                     parts: [{ text: m.content }],
                 }))
-                : []; // If only the initial bot message is there, start fresh to avoid role issues
+                : [];
 
             const chat = model.startChat({ history });
 
@@ -105,10 +107,16 @@ const AIChatAssistant = () => {
             setMessages(prev => [...prev, { role: 'model', content: text }]);
         } catch (error: any) {
             console.error('AI Chat Error Trace:', error);
+
+            // diagnostic: if 404, we might be using the wrong model name for this key/region
+            if (error?.message?.includes('404') || error?.message?.includes('not found')) {
+                console.warn('Model not found. This key might only support legacy names. Trying a different model name internally next time or check ListModels.');
+            }
+
             let errorMessage = "I'm sorry, I'm having trouble connecting right now. Please try again later.";
 
             if (error?.message?.includes('404') || error?.message?.includes('not found')) {
-                errorMessage = "Model not found. This might be a regional restriction or API key issue. Please contact support.";
+                errorMessage = "The AI model requested was not found. This usually happens if the API key is new or restricted to certain models. Please check Google AI Studio.";
             } else if (error?.message?.includes('API key not valid')) {
                 errorMessage = "The AI API key appears to be invalid. Please check your .env file.";
             } else if (error?.message?.includes('quota')) {
@@ -122,6 +130,7 @@ const AIChatAssistant = () => {
         } finally {
             setIsLoading(false);
         }
+
 
     };
 

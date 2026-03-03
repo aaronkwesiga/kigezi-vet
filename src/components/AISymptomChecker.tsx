@@ -65,6 +65,8 @@ const AISymptomChecker = () => {
             const genAI = getGenAI();
             if (!genAI) throw new Error("API key missing");
 
+            console.log('Symptom Checker: Using API Key starts with:', import.meta.env.VITE_GEMINI_API_KEY?.substring(0, 5));
+
             const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
             const prompt = `As a veterinary assistant, analyze these symptoms for a ${animalType}:
       Symptoms: ${selectedSymptoms.join(', ')}
@@ -82,10 +84,10 @@ const AISymptomChecker = () => {
             const response = await result.response;
             setPrediction(response.text());
         } catch (error: any) {
-            console.error('Symptom Checker Error:', error);
+            console.error('Symptom Checker Error Trace:', error);
             let msg = "Failed to get AI analysis. Please try again.";
             if (error?.message?.includes('not found') || error?.message?.includes('404')) {
-                msg = "The AI model was not found. This might be a regional restriction or temporary service issue.";
+                msg = "The AI model (gemini-1.5-flash) was not found. This key might be restricted or new. Please verify it in Google AI Studio.";
             }
             toast({
                 title: "AI Service Error",
