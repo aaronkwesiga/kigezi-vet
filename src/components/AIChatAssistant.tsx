@@ -73,23 +73,36 @@ const AIChatAssistant = () => {
         Current language setting: ${lang}.`
             });
 
-            const chat = model.startChat({
-                history: messages.map(m => ({
+            // Filtering history to ensure it's valid for Gemini (must not start with model/assistant in some cases)
+            const history = messages.length > 1
+                ? messages.map(m => ({
                     role: m.role,
                     parts: [{ text: m.content }],
-                })),
-            });
+                }))
+                : []; // If only the initial bot message is there, start fresh to avoid role issues
+
+            const chat = model.startChat({ history });
 
             const result = await chat.sendMessage(userMessage);
             const response = await result.response;
             const text = response.text();
 
             setMessages(prev => [...prev, { role: 'model', content: text }]);
-        } catch (error) {
+        } catch (error: any) {
             console.error('AI Chat Error:', error);
+            let errorMessage = "I'm sorry, I'm having trouble connecting right now. Please try again later.";
+
+            if (error?.message?.includes('API key not valid')) {
+                errorMessage = "The AI API key appears to be invalid. Please check your .env file.";
+            } else if (error?.message?.includes('quota')) {
+                errorMessage = "AI usage quota exceeded. Please try again later.";
+            } else if (error?.message?.includes('environment')) {
+                errorMessage = "Configuration error. Please restart your dev server.";
+            }
+
             setMessages(prev => [...prev, {
                 role: 'model',
-                content: "I'm sorry, I'm having trouble connecting right now. Please try again later or contact our support team."
+                content: errorMessage
             }]);
         } finally {
             setIsLoading(false);
