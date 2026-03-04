@@ -1,0 +1,6 @@
+{
+    "appId": "com.kigezivet.app",
+    "appName": "Kigezi Vet",
+    "webDir": "dist",
+    "bundledWebRuntime": false
+}
