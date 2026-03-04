@@ -44,6 +44,8 @@ jobs:
           npx cap add android
           npx cap copy android
           npx cap sync android
+          # Inject permissions for audio recording and settings
+          sed -i '/<application/i \    <uses-permission android:name="android.permission.RECORD_AUDIO" />\n    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />' android/app/src/main/AndroidManifest.xml
 
       - name: Build APK
         run: |

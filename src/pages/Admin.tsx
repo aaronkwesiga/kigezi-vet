@@ -618,9 +618,9 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="conversations" className="space-y-8 md:space-y-12">
-          <TabsList className="h-14 md:h-16 w-fit gap-3 md:gap-5 rounded-xl md:rounded-[3rem] bg-muted p-1.5 md:p-2 border border-foreground/5">
-            <TabsTrigger value="conversations" className="h-10 md:h-12 rounded-lg md:rounded-[2.5rem] px-5 md:px-10 text-xs md:text-base font-bold uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xl transition-all relative">
-              <MessageSquare className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-5 md:w-5" /> Farmer Consultations
+          <TabsList className="h-auto w-full md:w-fit flex-wrap justify-center md:justify-start gap-2 md:gap-5 rounded-xl md:rounded-[3rem] bg-muted p-2 md:p-2 border border-foreground/5">
+            <TabsTrigger value="conversations" className="h-10 md:h-12 flex-1 md:flex-none rounded-lg md:rounded-[2.5rem] px-3 md:px-10 text-[10px] md:text-base font-bold uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xl transition-all relative">
+              <MessageSquare className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-5 md:w-5" /> Consultations
               {conversations.some(c => (c.unread_count || 0) > 0) && (
                 <span className="absolute -top-1 -right-1 flex h-4 w-4">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
@@ -629,12 +629,12 @@ const Admin = () => {
               )}
             </TabsTrigger>
             {userRole === 'super_admin' && (
-              <TabsTrigger value="products" className="h-10 md:h-12 rounded-lg md:rounded-[2.5rem] px-5 md:px-10 text-xs md:text-base font-bold uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xl transition-all">
-                <Package className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-5 md:w-5" /> Product Inventory
+              <TabsTrigger value="products" className="h-10 md:h-12 flex-1 md:flex-none rounded-lg md:rounded-[2.5rem] px-3 md:px-10 text-[10px] md:text-base font-bold uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xl transition-all">
+                <Package className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-5 md:w-5" /> Inventory
               </TabsTrigger>
             )}
-            <TabsTrigger value="profile" className="h-10 md:h-12 rounded-lg md:rounded-[2.5rem] px-5 md:px-10 text-xs md:text-base font-bold uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xl transition-all">
-              <UserCircle className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-5 md:w-5" /> My Portfolio
+            <TabsTrigger value="profile" className="h-10 md:h-12 flex-1 md:flex-none rounded-lg md:rounded-[2.5rem] px-3 md:px-10 text-[10px] md:text-base font-bold uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xl transition-all">
+              <UserCircle className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-5 md:w-5" /> Portfolio
             </TabsTrigger>
           </TabsList>
 
