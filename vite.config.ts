@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => ({
     componentTagger(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      includeAssets: ['favicon.svg'],
       manifest: {
         name: 'Kigezi Vet',
         short_name: 'KigeziVet',
@@ -35,6 +35,15 @@ export default defineConfig(({ mode }) => ({
             type: 'image/png'
           }
         ]
+      },
+      workbox: {
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
+        skipWaiting: true,
+        navigateFallback: 'index.html',
+        // Try to avoid absolute path issues by specifying glob directory
+        globDirectory: 'dist',
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
       }
     })
   ].filter(Boolean),
