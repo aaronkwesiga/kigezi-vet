@@ -25,10 +25,12 @@ jobs:
       - name: Build Web App
         run: npm run build
         env:
-          VITE_SUPABASE_PROJECT_ID: '${{ secrets.VITE_SUPABASE_PROJECT_ID }}'
-          VITE_SUPABASE_PUBLISHABLE_KEY: '${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}'
-          VITE_SUPABASE_URL: '${{ secrets.VITE_SUPABASE_URL }}'
-          VITE_GEMINI_API_KEY: '${{ secrets.VITE_GEMINI_API_KEY }}'
+          # IMPORTANT: Verify these names exactly match your GitHub Secrets/Variables
+          # Use secrets.VAR_NAME for Secrets, or vars.VAR_NAME for Variables
+          VITE_SUPABASE_PROJECT_ID: "${{ secrets.VITE_SUPABASE_PROJECT_ID }}"
+          VITE_SUPABASE_PUBLISHABLE_KEY: "${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}"
+          VITE_SUPABASE_URL: "${{ secrets.VITE_SUPABASE_URL }}"
+          VITE_GEMINI_API_KEY: "${{ secrets.VITE_GEMINI_API_KEY }}"
 
       - name: Setup Java
         uses: actions/setup-java@v4
