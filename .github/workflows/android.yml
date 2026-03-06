@@ -25,10 +25,10 @@ jobs:
       - name: Build Web App
         run: npm run build
         env:
-          VITE_SUPABASE_PROJECT_ID: ${{ secrets.VITE_SUPABASE_PROJECT_ID || 'jdtlnwpirdyklkhdfcgt' }}
-          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_Zr4bMNP-fJJvPDMisaH-Xg_pZj7tEL_' }}
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL || 'https://jdtlnwpirdyklkhdfcgt.supabase.co' }}
-          VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY || 'AIzaSyAMq0yKD5i6YI-gq02FS3epdGmXMxgboTw' }}
+          VITE_SUPABASE_PROJECT_ID: ${{ secrets.VITE_SUPABASE_PROJECT_ID }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
 
       - name: Setup Java
         uses: actions/setup-java@v4
