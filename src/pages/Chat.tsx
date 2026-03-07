@@ -234,22 +234,55 @@ const Chat = () => {
       return;
     }
 
-    // Auto-Reply Logic: If this is the first visitor message or sent after hours, provide helpful info
+    // Auto-Reply Logic: Keyword-Based Veterinary Advisor + Office Hours
     setTimeout(async () => {
       const now = new Date();
       const hour = now.getHours();
       const isWeekend = now.getDay() === 0 || now.getDay() === 6;
       const isAfterHours = hour < 8 || hour >= 18 || isWeekend;
+      const lowerMsg = msgText.toLowerCase();
 
-      let autoReplyTxt = "";
+      let advisorAdvice = "";
 
-      if (isAfterHours) {
-        autoReplyTxt = lang === 'en'
-          ? "Our office is currently closed (Hours: 8 AM - 6 PM, Mon-Fri). Your message has been received and a veterinarian will respond as soon as we are back online. For emergencies, please call our emergency line directly."
+      // Keyword matching for localized advice
+      if (lowerMsg.includes('newcastle') || lowerMsg.includes('kuku') || lowerMsg.includes('chicken') || lowerMsg.includes('poultry') || lowerMsg.includes('nkoko')) {
+        advisorAdvice = lang === 'en'
+          ? "VET ADVISOR: This sounds like Newcastle Disease or a respiratory infection. Isolate sick birds immediately. Use electrolytes in water and ensure proper ventilation. Vaccination is the best prevention. A vet will review this shortly."
           : lang === 'rk'
-            ? "Ofiisi yitu yaigwa (Esha: 2 zashekya - 12 zaigoro, Orwokubanza - Orwokutaano). Obutumwa bwawe buhikire kandi omushaho naija kukugaruramu ku turaabe turaatandika kukora. Aha mbeera y'obururu, teera esimu y'obururu."
-            : "Ibiro byacu bifunze ubu (Amasaha: 8 AM - 6 PM, Kuwa mbere - Kuwa gatanu). Ubutumwa bwawe bwakiriwe kandi umuganga azagusubiza vuba bishoboka. Hamagara umurongo wihuse mu gihe habaye ikibazo gikomeye.";
-      } else {
+            ? "OBUHABUZI BW'OMUSHAHO: Eki nikishushana n'endwara ya Newcastle (NCD). Otize enkoko ezirwaire hure n'ezindi. Zihe electrolytes omumaizi kandi orabeho nk'oku emishaho yaakuhabaire. Omushaho naija kukugaruramu."
+            : "INAMA Z'UMUGANGA: Ibi birasa n'indwara ya Newcastle muzwi nko 'Sotoka'. Gura inkoko zirwaye ukwazo. Zihe amazi arimo imyunyungucu (electrolytes). Umuganga agiye kugusubiza mu kanya.";
+      } else if (lowerMsg.includes('cattle') || lowerMsg.includes('cow') || lowerMsg.includes('ecf') || lowerMsg.includes('ticks') || lowerMsg.includes('ente')) {
+        advisorAdvice = lang === 'en'
+          ? "VET ADVISOR: Symptoms in cattle often relate to Tick-Borne diseases like East Coast Fever. Check for high fever or swollen lymph nodes. Do not pierce swellings. Ensure animals are sprayed/dipped correctly. A vet will contact you."
+          : lang === 'rk'
+            ? "OBUHABUZI BW'OMUSHAHO: Embiri y'ente neebaasa kuba erwaire endwara z'entunda (ECF). Kebera yaaba eina omuriro gw'amaani. Otatobora amashunju. Dipping/Spraying neekaswa kukorwa gye. Omushaho naija kukuhabura."
+            : "INAMA Z'UMUGANGA: Ibi bishobora kuba biterwa n'uburwayi bw'amashu (East Coast Fever). Reba niba ifite umuriro mwinshi. Menya ko inka ziterwa umuti w'imibu n'amashu neza. Tegereza umuganga agufashe.";
+      } else if (lowerMsg.includes('goat') || lowerMsg.includes('sheep') || lowerMsg.includes('ppr') || lowerMsg.includes('embuzi')) {
+        advisorAdvice = lang === 'en'
+          ? "VET ADVISOR: For small ruminants, respiratory distress (PPR) or worms are common. Keep them dry and out of the rain. If there is coughing or nasal discharge, isolation is key. A vet will verify these signs shortly."
+          : lang === 'rk'
+            ? "OBUHABUZI BW'OMUSHAHO: Embuzi n'entama n'emirundi mingi nizirwara PPR (obuhita) nari eminyu. Zihe ekyokurya kirungi kandi ozikuume omu mwanya omwoma. Omushaho naija kukugaruramu omukanya kake."
+            : "INAMA Z'UMUGANGA: Ihene n'intama kenshi zirwara PPR (indwara y'ubuhumekero). Zirinde imvura n'ubukonje. Niba zinkorora, ziguture ukwazo. Umuganga azakwandikira umuti ukwiriye vuba.";
+      } else if (lowerMsg.includes('blood') || lowerMsg.includes('diarrhea') || lowerMsg.includes('droppings') || lowerMsg.includes('eshagama')) {
+        advisorAdvice = lang === 'en'
+          ? "VET ADVISOR: Bloody droppings or diarrhea often indicate Coccidiosis or severe worms. Clean the environment thoroughly and keep feed/water off the ground. A vet will recommend the specific medication needed."
+          : lang === 'rk'
+            ? "OBUHABUZI BW'OMUSHAHO: Eshagama omu kusage nari embiisi n'akamanyiso k'endwara y'eminyu nari Coccidiosis. Cuma omwanya gwabo kandi otaze ekyokurya ahansi. Omushaho naija kukuha omubazi gubwire."
+            : "INAMA Z'UMUGANGA: Amasitari arimo amaraso kenshi aba ari ikimenyetso cya Coccidiosis cyangwa inzoka. Sukura neza aho bibera. Umuganga azakwandikira umuti ukwiriye vuba.";
+      }
+
+      let autoReplyTxt = advisorAdvice;
+
+      // Add office hours message if appropriate
+      if (isAfterHours) {
+        const ohMsg = lang === 'en'
+          ? "\n\n(Note: Our office is currently closed. A veterinarian will provide further human guidance at 8:00 AM.)"
+          : lang === 'rk'
+            ? "\n\n(Manyisa: Ofiisi yaigwa ubu. Omushaho naija kukuhabura gye aha sha mbiri [8:00 AM].)"
+            : "\n\n(Menya ko ibiro bifunze ubu. Umuganga azaguha ubundi bufasha mu gitondo saa 8:00 AM.)";
+        autoReplyTxt += ohMsg;
+      } else if (!advisorAdvice) {
+        // Fallback for general messages during business hours if no keywords found
         const visitorMessagesCount = messages.filter(m => m.sender_type === 'visitor').length;
         if (visitorMessagesCount === 0 && !overrideMsg) {
           autoReplyTxt = lang === 'en'
