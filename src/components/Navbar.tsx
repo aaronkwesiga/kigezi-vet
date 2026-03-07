@@ -65,7 +65,6 @@ const Navbar = () => {
     { to: '/', label: t('nav.home', lang) },
     { to: '/products', label: t('nav.products', lang) },
     { to: '/chat', label: t('nav.chat', lang) },
-    { to: '/ai-symptom-checker', label: 'AI Health Checker', badge: 'NEW' },
     { to: '/contact', label: t('nav.contact', lang) },
 
 

@@ -17,8 +17,6 @@ import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
-import AIChatAssistant from "@/components/AIChatAssistant";
-import AISymptomChecker from "@/components/AISymptomChecker";
 
 
 
@@ -59,13 +57,11 @@ const App = () => (
                           </ProtectedRoute>
                         }
                       />
-                      <Route path="/ai-symptom-checker" element={<AISymptomChecker />} />
                       <Route path="*" element={<NotFound />} />
 
                     </Routes>
                   </main>
                   <Footer />
-                  <AIChatAssistant />
                 </div>
 
               </HashRouter>

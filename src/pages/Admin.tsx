@@ -78,7 +78,6 @@ const Admin = () => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const recordingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const [isSummarizing, setIsSummarizing] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -282,33 +281,6 @@ const Admin = () => {
     }
   };
 
-  const summarizeCase = async () => {
-    if (!selectedConvo || messages.length === 0 || isSummarizing) return;
-    setIsSummarizing(true);
-
-    // Simulate AI summarization logic
-    setTimeout(() => {
-      const visitorMessages = messages.filter(m => m.sender_type === 'visitor');
-      if (visitorMessages.length === 0) {
-        toast({ title: "No messages to summarize." });
-        setIsSummarizing(false);
-        return;
-      }
-
-      const summaryText = visitorMessages
-        .map(m => m.message)
-        .join(' ')
-        .slice(0, 300);
-
-      const finalSummary = `AI CONSULTATION BRIEF: Farmer is reporting issues related to: "${summaryText.slice(0, 100)}...". Analysis suggests potential bacterial infection or dietary distress. Recommendation: Request temperature and check for lesion presence.`;
-
-      toast({
-        title: "AI Case Summary",
-        description: finalSummary,
-      });
-      setIsSummarizing(false);
-    }, 2000);
-  };
 
   const startRecording = async () => {
     try {
@@ -727,15 +699,6 @@ const Admin = () => {
                         </Popover>
                         {conversations.find(c => c.id === selectedConvo)?.status === 'open' && (
                           <div className="flex items-center gap-2">
-                            <Button
-                              onClick={summarizeCase}
-                              disabled={isSummarizing || messages.length === 0}
-                              variant="ghost"
-                              className="h-10 md:h-12 px-4 border border-primary/20 text-primary font-bold uppercase text-[9px] md:text-xs tracking-widest hover:bg-primary/10 transition-all rounded-lg md:rounded-xl flex items-center gap-2"
-                            >
-                              {isSummarizing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                              Summarize
-                            </Button>
                             <Button
                               onClick={() => resolveConversation(selectedConvo)}
                               variant="ghost"

@@ -68,7 +68,6 @@ const Chat = () => {
   const audioChunksRef = useRef<Blob[]>([]);
   const recordingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [ttsEnabled, setTtsEnabled] = useState(false); // Changed from true to false
-  const [isAiLoading, setIsAiLoading] = useState(false);
   const spokenMessageIdsRef = useRef<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -235,16 +234,33 @@ const Chat = () => {
       return;
     }
 
-    // Auto-Reply Logic: If this is the first visitor message, send an acknowledgment
-    const visitorMessages = messages.filter(m => m.sender_type === 'visitor');
-    if (visitorMessages.length === 0 && !overrideMsg) {
-      setTimeout(async () => {
-        const autoReplyTxt = lang === 'en'
-          ? "Acknowledgment Protocol: Message received. A veterinarian will review your consultation shortly. Please remain on the line."
-          : lang === 'rk'
-            ? "Obutumwa buhikire. Omushaho w'ebitungwa naija kugugaruramu omukanya kake. Lindira hano."
-            : "Ubutumwa bwakiriwe. Umuganga w'amatungo agiye kugusubiza mu kanya gato. Tegereza hano.";
+    // Auto-Reply Logic: If this is the first visitor message or sent after hours, provide helpful info
+    setTimeout(async () => {
+      const now = new Date();
+      const hour = now.getHours();
+      const isWeekend = now.getDay() === 0 || now.getDay() === 6;
+      const isAfterHours = hour < 8 || hour >= 18 || isWeekend;
 
+      let autoReplyTxt = "";
+
+      if (isAfterHours) {
+        autoReplyTxt = lang === 'en'
+          ? "Our office is currently closed (Hours: 8 AM - 6 PM, Mon-Fri). Your message has been received and a veterinarian will respond as soon as we are back online. For emergencies, please call our emergency line directly."
+          : lang === 'rk'
+            ? "Ofiisi yitu yaigwa (Esha: 2 zashekya - 12 zaigoro, Orwokubanza - Orwokutaano). Obutumwa bwawe buhikire kandi omushaho naija kukugaruramu ku turaabe turaatandika kukora. Aha mbeera y'obururu, teera esimu y'obururu."
+            : "Ibiro byacu bifunze ubu (Amasaha: 8 AM - 6 PM, Kuwa mbere - Kuwa gatanu). Ubutumwa bwawe bwakiriwe kandi umuganga azagusubiza vuba bishoboka. Hamagara umurongo wihuse mu gihe habaye ikibazo gikomeye.";
+      } else {
+        const visitorMessagesCount = messages.filter(m => m.sender_type === 'visitor').length;
+        if (visitorMessagesCount === 0 && !overrideMsg) {
+          autoReplyTxt = lang === 'en'
+            ? "Acknowledgment Protocol: Message received. A veterinarian will review your consultation shortly. Please remain on the line."
+            : lang === 'rk'
+              ? "Obutumwa buhikire. Omushaho w'ebitungwa naija kugugaruramu omukanya kake. Lindira hano."
+              : "Ubutumwa bwakiriwe. Umuganga w'amatungo agiye kugusubiza mu kanya gato. Tegereza hano.";
+        }
+      }
+
+      if (autoReplyTxt) {
         const { data: autoMsgData } = await supabase.from('chat_messages').insert({
           conversation_id: conversationId,
           sender_type: 'admin',
@@ -253,12 +269,10 @@ const Chat = () => {
         }).select().single();
 
         if (autoMsgData) {
-          // No need to manually set messages, the real-time listener will pick it up
-          // but we do it for immediate feedback just in case
           setMessages(prev => [...prev, autoMsgData as Message]);
         }
-      }, 1500);
-    }
+      }
+    }, 1500);
   }, [conversationId, input, toast, messages, lang]);
 
   const stopRecording = useCallback(async () => {
@@ -388,43 +402,6 @@ const Chat = () => {
     setMessages([{ id: crypto.randomUUID(), conversation_id: newId, sender_type: 'admin', message: welcomeMsg, created_at: new Date().toISOString(), is_read: true }]);
   };
 
-  const askAi = async () => {
-    if (!conversationId || messages.length === 0 || isAiLoading) return;
-    setIsAiLoading(true);
-
-    // Simulate AI thinking delay
-    setTimeout(async () => {
-      const visitorMessages = messages.filter(m => m.sender_type === 'visitor');
-      const lastMsg = visitorMessages.length > 0 ? visitorMessages[visitorMessages.length - 1].message.toLowerCase() : "";
-
-      let aiResponse = "";
-      if (lang === 'en') {
-        if (lastMsg.includes('cow') || lastMsg.includes('cattle')) {
-          aiResponse = "AI ASSISTANT: Cattle symptoms often relate to diet or environment. Ensure they have adequate salt and clean water. If there's localized swelling, do not pierce it. Wait for the vet. (AI Advice)";
-        } else if (lastMsg.includes('goat') || lastMsg.includes('sheep')) {
-          aiResponse = "AI ASSISTANT: For small ruminants, respiratory issues are common. Keep them in a well-ventilated, dry area. Wait for the vet to check for pests or pneumonia. (AI Advice)";
-        } else {
-          aiResponse = "AI ASSISTANT: I have analyzed your concern. Please ensure the animal is isolated from others to prevent potential spread. A human veterinarian will review this full history shortly. (AI Advice)";
-        }
-      } else if (lang === 'rk') {
-        aiResponse = "AI ASSISTANT: Obuhabuzi bw'ekyoma (AI): Ba otize eitungwa hure n'ebindi. Rihe amaizi macumi kandi orilindire omushaho kuhika. (AI Advice)";
-      } else {
-        aiResponse = "AI ASSISTANT: Inama za AI: Gura itungo ryawe kure y'ayandi. Rihe amazi meza kandi utegereze umuganga w'amatungo aze kugenzura. (AI Advice)";
-      }
-
-      const { data: aiMsg } = await supabase.from('chat_messages').insert({
-        conversation_id: conversationId,
-        sender_type: 'admin',
-        message: aiResponse,
-        is_read: true
-      }).select().single();
-
-      if (aiMsg) {
-        setMessages(prev => [...prev, aiMsg as Message]);
-      }
-      setIsAiLoading(false);
-    }, 2500);
-  };
 
   if (authLoading) return <div className="flex min-h-screen items-center justify-center bg-background"><div className="h-20 md:h-32 w-20 md:w-32 border-8 md:border-[16px] border-primary border-t-transparent rounded-full animate-spin shadow-2xl" /></div>;
   if (!user) return <div className="flex min-h-screen items-center justify-center bg-background p-6 text-center"><div className="glass p-10 md:p-20 rounded-[3rem] md:rounded-[5rem] border-4 md:border-8 border-primary shadow-2xl"><h1 className="text-4xl md:text-6xl font-black text-foreground uppercase mb-10">Access Denied</h1><Button onClick={() => navigate('/login')} className="h-16 md:h-28 px-10 md:px-16 bg-secondary hover:brightness-110 text-white font-black uppercase text-lg md:text-2xl rounded-2xl md:rounded-[2rem] border-b-8 md:border-b-[12px] border-black/20 transition-all">Authorize Login</Button></div></div>;
@@ -532,16 +509,6 @@ const Chat = () => {
                 />
               </PopoverContent>
             </Popover>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={askAi}
-              disabled={isAiLoading || messages.length === 0}
-              className="hidden md:flex items-center gap-2 bg-white/10 text-white hover:bg-white/20 rounded-xl px-4 border border-white/20 font-bold uppercase tracking-widest text-[10px]"
-            >
-              {isAiLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4 text-secondary" />}
-              AI Assistant
-            </Button>
             <Button
               variant="ghost"
               size="icon"
