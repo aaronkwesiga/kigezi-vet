@@ -40,7 +40,7 @@ export default defineConfig(({ mode }) => ({
         cleanupOutdatedCaches: true,
         clientsClaim: true,
         skipWaiting: true,
-        navigateFallback: 'index.html',
+        navigateFallback: null,
         // Try to avoid absolute path issues by specifying glob directory
         globDirectory: 'dist',
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
