@@ -58,7 +58,7 @@ const Navbar = () => {
       .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'chat_messages' }, () => fetchUnread())
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => { supabase.removeChannel(channel).catch(() => { }); };
   }, [user, isAdmin]);
 
   const links = [

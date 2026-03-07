@@ -169,7 +169,7 @@ const Chat = () => {
         setMessages(prev => prev.filter(m => m.id !== payload.old.id));
       })
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+    return () => { supabase.removeChannel(channel).catch(() => { }); };
   }, [conversationId, user?.id]);
 
   const toggleListening = useCallback(() => {

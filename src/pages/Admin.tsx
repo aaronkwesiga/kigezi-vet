@@ -107,7 +107,7 @@ const Admin = () => {
       })
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => { supabase.removeChannel(channel).catch(() => { }); };
   }, [user, isAdmin]);
 
   useEffect(() => {
@@ -142,7 +142,7 @@ const Admin = () => {
       )
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => { supabase.removeChannel(channel).catch(() => { }); };
   }, [selectedConvo]);
 
   const scrollToBottom = () => bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
