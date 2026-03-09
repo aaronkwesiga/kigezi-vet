@@ -42,12 +42,7 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Sync Android Platform
-        run: |
-          npx cap sync android
-          # Inject permissions for audio recording and settings if not already present
-          if ! grep -q "RECORD_AUDIO" android/app/src/main/AndroidManifest.xml; then
-            sed -i '/\<application/i \    \<uses-permission android:name="android.permission.RECORD_AUDIO" /\>\n    \<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /\>' android/app/src/main/AndroidManifest.xml
-          fi
+        run: npx cap sync android
 
       - name: Build APK
         run: |
