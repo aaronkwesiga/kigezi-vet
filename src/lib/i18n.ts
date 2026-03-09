@@ -96,6 +96,19 @@ const translations: Record<string, Record<Language, string>> = {
   // Footer
   'footer.rights': { en: '© 2026 Kigezi Vet Drugshop. All rights reserved.', rk: '© 2026 Kigezi Vet Drugshop. Oburenganzira bwona.', rn: '© 2026 Kigezi Vet Drugshop. Oburenganzira bwona.' },
 
+  // Testimonials
+  'testimonials.title': { en: 'What Our Clients Say', rk: 'Ebi Abantu Bagamba', rn: 'Ebi Abantu Bagamba' },
+  'testimonials.subtitle': { en: 'Trusted by farmers across the Kigezi region', rk: 'Abeikirizibwa abahiisa omu Kigezi yona', rn: 'Abeikirizibwa abahiisa omu Kigezi yona' },
+  'testimonials.1.text': { en: 'Kigezi Vet Drugshop saved my herd during the last outbreak. Their staff are professional and the medicine is genuine.', rk: 'Kigezi Vet Drugshop nibo bakijije ente zangye omu bwire bw\'oburwaire. Abakozi babo n\'abokwikirizibwa.', rn: 'Kigezi Vet Drugshop nibo bakijije ente zangye omu bwire bw\'oburwaire. Abakozi babo n\'abokwikirizibwa.' },
+  'testimonials.1.author': { en: 'Mugisha John', rk: 'Mugisha John', rn: 'Mugisha John' },
+  'testimonials.1.location': { en: 'Dairy Farmer, Kabale', rk: 'Omuhiisa, Kabale', rn: 'Omuhiisa, Kabale' },
+  'testimonials.2.text': { en: 'The best veterinary shop in the region! I always get my poultry vaccines here and they never disappoint.', rk: 'Shop y\'emibazi y\'ente ekurayo omuri Kigezi! Obwire bwona nshanga emibazi y\'enkoko ekaruhura.', rn: 'Shop y\'emibazi y\'ente ekurayo omuri Kigezi! Obwire bwona nshanga emibazi y\'enkoko ekaruhura.' },
+  'testimonials.2.author': { en: 'Ankunda Sarah', rk: 'Ankunda Sarah', rn: 'Ankunda Sarah' },
+  'testimonials.2.location': { en: 'Poultry Farmer, Kisoro', rk: 'Omuhiisa, Kisoro', rn: 'Omuhiisa, Kisoro' },
+  'testimonials.3.text': { en: 'I appreciate their advice as much as their medicine. They truly care about the local farmer.', rk: 'Ninkunda obuhabuzi bwabo n\'emibazi yabo. Nibafa muno aha muhiisa.', rn: 'Ninkunda obuhabuzi bwabo n\'emibazi yabo. Nibafa muno aha muhiisa.' },
+  'testimonials.3.author': { en: 'Byamugisha Frank', rk: 'Byamugisha Frank', rn: 'Byamugisha Frank' },
+  'testimonials.3.location': { en: 'Cattle Farmer, Rukungiri', rk: 'Omuhiisa, Rukungiri', rn: 'Omuhiisa, Rukungiri' },
+
   // Errors
   'error.title': { en: 'Something went wrong', rk: 'Harimu ekizibu', rn: 'Harimu ekizibu' },
   'error.subtitle': { en: 'We apologize for the inconvenience. Please try again or contact support.', rk: 'Tukusaasire ahabw\'ekizibu eki. Tandika kabaakari nari tuteere esimu.', rn: 'Tukusaasire ahabw\'ekizibu eki. Tandika kabaakari nari tuteere esimu.' },

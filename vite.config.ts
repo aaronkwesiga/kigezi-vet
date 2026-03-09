@@ -16,7 +16,9 @@ export default defineConfig(({ mode }) => ({
     mode === 'development' &&
     componentTagger(),
     VitePWA({
+      disable: __dirname.includes("'"), // Workaround for workbox-build apostrophe path bug
       registerType: 'autoUpdate',
+      injectRegister: 'inline',
       includeAssets: ['favicon.svg'],
       manifest: {
         name: 'Kigezi Vet',
@@ -41,9 +43,8 @@ export default defineConfig(({ mode }) => ({
         clientsClaim: true,
         skipWaiting: true,
         navigateFallback: null,
-        // Try to avoid absolute path issues by specifying glob directory
-        globDirectory: 'dist',
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        sourcemap: false,
+        inlineWorkboxRuntime: true,
       }
     })
   ].filter(Boolean),
