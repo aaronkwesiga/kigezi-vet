@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LayoutDashboard, MessageSquare, Package, Plus, Trash2, Edit2, UserCircle, CheckCircle2, Send, Check, CheckCheck, X, LogOut, Zap, Mic, MicOff, Square, Volume2, Sparkles, Loader2, Camera, Image, Award, Briefcase, Clock, Video } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Package, Plus, Trash2, Edit2, UserCircle, CheckCircle2, Send, Check, CheckCheck, X, LogOut, Zap, Mic, MicOff, Square, Volume2, Sparkles, Loader2, Camera, Image, Award, Briefcase, Clock, Video, Star } from 'lucide-react';
 import { format, isToday, isYesterday, startOfDay } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -56,6 +56,15 @@ interface Profile {
   avatar_url: string | null;
 }
 
+interface Testimonial {
+  id: string;
+  name: string;
+  location: string;
+  content: string;
+  is_approved: boolean;
+  created_at: string;
+}
+
 const Admin = () => {
   const { user, userRole, isAdmin, loading: authLoading, signOut } = useAuth();
   const { lang } = useLanguage();
@@ -66,6 +75,7 @@ const Admin = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [reply, setReply] = useState('');
   const [products, setProducts] = useState<Product[]>([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [newProduct, setNewProduct] = useState({
     name_en: '', name_rk: '', name_rn: '',
@@ -95,6 +105,7 @@ const Admin = () => {
     fetchConversations();
     fetchProducts();
     fetchProfile();
+    fetchTestimonials();
 
     const channel = supabase
       .channel('admin-updates')
@@ -185,6 +196,11 @@ const Admin = () => {
   const fetchProducts = async () => {
     const { data } = await supabase.from('products').select('*').order('name_en');
     setProducts((data as Product[]) || []);
+  };
+
+  const fetchTestimonials = async () => {
+    const { data } = await supabase.from('testimonials').select('*').order('created_at', { ascending: false });
+    setTestimonials((data as Testimonial[]) || []);
   };
 
   const fetchProfile = async () => {
@@ -536,6 +552,26 @@ const Admin = () => {
     fetchProducts();
   };
 
+  const approveTestimonial = async (id: string, currentStatus: boolean) => {
+    const { error } = await supabase.from('testimonials').update({ is_approved: !currentStatus }).eq('id', id);
+    if (error) {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+    } else {
+      toast({ title: currentStatus ? 'Testimonial Hidden' : 'Testimonial Approved' });
+      fetchTestimonials();
+    }
+  };
+
+  const deleteTestimonial = async (id: string) => {
+    const { error } = await supabase.from('testimonials').delete().eq('id', id);
+    if (error) {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+    } else {
+      toast({ title: 'Testimonial Deleted' });
+      fetchTestimonials();
+    }
+  };
+
   if (authLoading) return <div className="flex min-h-screen items-center justify-center bg-background"><div className="h-16 md:h-24 w-16 md:w-24 border-8 md:border-[12px] border-primary border-t-transparent rounded-full animate-spin shadow-2xl" /></div>;
   if (!user) return <Navigate to="/login" />;
   if (!isAdmin) return (
@@ -605,6 +641,9 @@ const Admin = () => {
                 <Package className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-5 md:w-5" /> Inventory
               </TabsTrigger>
             )}
+            <TabsTrigger value="testimonials" className="h-10 md:h-12 flex-1 md:flex-none rounded-lg md:rounded-[2.5rem] px-3 md:px-10 text-[10px] md:text-base font-bold uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xl transition-all">
+              <Star className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-5 md:w-5" /> Reviews
+            </TabsTrigger>
             <TabsTrigger value="profile" className="h-10 md:h-12 flex-1 md:flex-none rounded-lg md:rounded-[2.5rem] px-3 md:px-10 text-[10px] md:text-base font-bold uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xl transition-all">
               <UserCircle className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-5 md:w-5" /> Portfolio
             </TabsTrigger>
@@ -1063,6 +1102,84 @@ const Admin = () => {
                         </td>
                       </tr>
                     ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="testimonials" className="animate-in fade-in slide-in-from-left-8 duration-1000">
+            <div className="mb-12 flex flex-col sm:flex-row items-center justify-between gap-8 border-b border-foreground/5 pb-12">
+              <div className="text-center sm:text-left">
+                <h2 className="font-display text-4xl md:text-6xl font-bold text-foreground uppercase tracking-tight">Reviews</h2>
+                <p className="text-primary font-bold uppercase tracking-[0.4em] text-md md:text-xl mt-3">Client Feedback Moderation</p>
+              </div>
+            </div>
+
+            <div className="bg-card rounded-2xl md:rounded-[3rem] overflow-hidden border border-foreground/5 shadow-2xl">
+              <div className="overflow-x-auto custom-scrollbar">
+                <table className="w-full text-left">
+                  <thead>
+                    <tr className="bg-primary/5 border-b border-foreground/5 text-foreground/60">
+                      <th className="p-6 md:p-8 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.4em]">Client Details</th>
+                      <th className="p-6 md:p-8 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.4em]">Testimonial Content</th>
+                      <th className="p-6 md:p-8 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.4em]">Status</th>
+                      <th className="p-6 md:p-8 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-foreground/5">
+                    {testimonials.map(t => (
+                      <tr key={t.id} className="transition-all hover:bg-muted/50">
+                        <td className="p-6 md:p-8 align-top">
+                          <p className="font-bold text-lg text-foreground tracking-tight uppercase mb-1">{t.name}</p>
+                          <p className="text-[10px] font-bold text-primary/60 uppercase tracking-widest">{t.location}</p>
+                          <p className="text-[8px] md:text-[9px] font-bold text-foreground/40 uppercase tracking-[0.2em] mt-3">
+                            {format(new Date(t.created_at), 'MMM d, yyyy')}
+                          </p>
+                        </td>
+                        <td className="p-6 md:p-8 align-top max-w-md">
+                          <p className="text-sm md:text-base font-medium text-foreground/80 leading-relaxed italic">
+                            "{t.content}"
+                          </p>
+                        </td>
+                        <td className="p-6 md:p-8 align-top">
+                          <Badge className={`px-3 py-1.5 text-[9px] md:text-[10px] font-bold uppercase tracking-widest border-none ${t.is_approved ? 'bg-secondary/20 text-secondary' : 'bg-primary/10 text-primary'}`}>
+                            {t.is_approved ? 'Approved' : 'Pending'}
+                          </Badge>
+                        </td>
+                        <td className="p-6 md:p-8 text-center align-top">
+                          <div className="flex items-center justify-center gap-2">
+                            <Button
+                              variant="ghost"
+                              onClick={() => approveTestimonial(t.id, t.is_approved)}
+                              className={`h-9 w-9 md:h-12 md:w-12 rounded-lg md:rounded-xl shadow-md border border-foreground/5 transition-all
+                                ${t.is_approved ? 'bg-muted/50 text-foreground/40 hover:bg-foreground/10 hover:text-foreground' : 'bg-secondary/10 text-secondary hover:bg-secondary hover:text-white'}`}
+                              title={t.is_approved ? "Hide Testimonial" : "Approve Testimonial"}
+                            >
+                              {t.is_approved ? <X className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4 md:h-5 md:w-5" />}
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              onClick={() => {
+                                if (window.confirm('Are you sure you want to permanently delete this testimonial?')) {
+                                  deleteTestimonial(t.id);
+                                }
+                              }}
+                              className="h-9 w-9 md:h-12 md:w-12 rounded-lg md:rounded-xl bg-muted/50 text-primary hover:bg-primary hover:text-white transition-all shadow-md border border-foreground/5"
+                            >
+                              <Trash2 className="h-3.5 w-3.5 md:h-5 md:w-5" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {testimonials.length === 0 && (
+                      <tr>
+                        <td colSpan={4} className="p-10 text-center text-foreground/40 font-medium uppercase tracking-widest">
+                          No testimonials recorded yet.
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>

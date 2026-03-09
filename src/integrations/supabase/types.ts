@@ -160,6 +160,33 @@ export type Database = {
         }
         Relationships: []
       }
+      testimonials: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_approved: boolean
+          location: string
+          name: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_approved?: boolean
+          location: string
+          name: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_approved?: boolean
+          location?: string
+          name?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
