@@ -203,7 +203,7 @@ const Testimonials = () => {
                                             required
                                             value={formData.name}
                                             onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                                            placeholder="e.g. John Doe"
+                                            placeholder="e.g. Aaron Kwesiga"
                                             className="h-12 bg-background/50 border-foreground/10 rounded-xl px-4 font-medium transition-all focus:border-primary/50"
                                         />
                                     </div>
