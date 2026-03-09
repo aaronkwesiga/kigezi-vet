@@ -8,9 +8,9 @@ if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
   console.error("Missing Supabase configuration. Please check your environment variables.");
 }
 
-// Fallback to avoid crashing the whole app on startup if variables are missing
-const supabaseUrl = SUPABASE_URL || "https://placeholder.supabase.co";
-const supabaseKey = SUPABASE_PUBLISHABLE_KEY || "placeholder";
+// Fallback to actual credentials to ensure the APK build always connects
+const supabaseUrl = SUPABASE_URL || "https://jdtlnwpirdyklkhdfcgt.supabase.co";
+const supabaseKey = SUPABASE_PUBLISHABLE_KEY || "sb_publishable_Zr4bMNP-fJJvPDMisaH-Xg_pZj7tEL_";
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseKey, {
   auth: {
