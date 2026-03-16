@@ -76,8 +76,8 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 border-b border-primary/10 bg-background/80 backdrop-blur-xl transition-colors duration-500">
       <div className="container mx-auto flex items-center justify-between px-4 md:px-6 py-3 md:py-4">
         <Link to="/" className="flex items-center gap-3 md:gap-4 group">
-          <div className="flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-lg md:rounded-xl bg-primary shadow-sm transition-all group-hover:scale-105 border border-primary/10">
-            <span className="font-display text-lg md:text-xl font-bold text-primary-foreground">K</span>
+          <div className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-lg md:rounded-xl bg-transparent transition-all group-hover:scale-105">
+            <img src="/logo.png" alt="Kigezi Vet Logo" className="h-full w-full object-contain drop-shadow-sm" />
           </div>
           <div className="flex flex-col">
             <span className="font-display text-lg md:text-xl font-bold text-foreground leading-none tracking-tight uppercase">
