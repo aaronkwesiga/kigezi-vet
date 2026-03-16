@@ -77,7 +77,7 @@ const Navbar = () => {
       <div className="container mx-auto flex items-center justify-between px-4 md:px-6 py-3 md:py-4">
         <Link to="/" className="flex items-center gap-3 md:gap-4 group">
           <div className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-lg md:rounded-xl bg-transparent transition-all group-hover:scale-105">
-            <img src="/logo.png" alt="Kigezi Vet Logo" className="h-full w-full object-contain drop-shadow-sm" />
+            <img src="logo.png" alt="Kigezi Vet Logo" className="h-full w-full object-contain drop-shadow-sm" />
           </div>
           <div className="flex flex-col">
             <span className="font-display text-lg md:text-xl font-bold text-foreground leading-none tracking-tight uppercase">
