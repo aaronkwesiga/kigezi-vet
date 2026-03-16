@@ -8,11 +8,12 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LayoutDashboard, MessageSquare, Package, Plus, Trash2, Edit2, UserCircle, CheckCircle2, Send, Check, CheckCheck, X, LogOut, Zap, Mic, MicOff, Square, Volume2, Sparkles, Loader2, Camera, Image, Award, Briefcase, Clock, Video, Star } from 'lucide-react';
-import { format, isToday, isYesterday, startOfDay } from 'date-fns';
+import { LayoutDashboard, MessageSquare, Package, Plus, Trash2, Edit2, UserCircle, CheckCircle2, Send, Check, CheckCheck, X, LogOut, Zap, Mic, MicOff, Square, Volume2, Sparkles, Loader2, Camera, Image, Award, Briefcase, Clock, Video, Star, ClipboardList, Filter, ShieldAlert } from 'lucide-react';
+import { format, isToday, isYesterday, startOfDay, formatDistanceToNow } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
+import { logActivity } from '@/lib/activityLogger';
 
 interface Conversation {
   id: string;
@@ -65,6 +66,18 @@ interface Testimonial {
   created_at: string;
 }
 
+interface ActivityLog {
+  id: string;
+  admin_user_id: string | null;
+  admin_email: string;
+  action: string;
+  entity_type: string | null;
+  entity_id: string | null;
+  details: string;
+  metadata: Record<string, unknown> | null;
+  created_at: string;
+}
+
 const Admin = () => {
   const { user, userRole, isAdmin, loading: authLoading, signOut } = useAuth();
   const { lang } = useLanguage();
@@ -76,6 +89,8 @@ const Admin = () => {
   const [reply, setReply] = useState('');
   const [products, setProducts] = useState<Product[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [activityLogs, setActivityLogs] = useState<ActivityLog[]>([]);
+  const [logFilter, setLogFilter] = useState<string>('all');
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [newProduct, setNewProduct] = useState({
     name_en: '', name_rk: '', name_rn: '',
@@ -106,6 +121,13 @@ const Admin = () => {
     fetchProducts();
     fetchProfile();
     fetchTestimonials();
+    if (userRole === 'super_admin') fetchActivityLogs();
+
+    logActivity({
+      action: 'admin_login',
+      entity_type: 'auth',
+      details: 'Admin logged into Command Center',
+    });
 
     const channel = supabase
       .channel('admin-updates')
@@ -115,10 +137,13 @@ const Admin = () => {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_conversations' }, () => {
         fetchConversations();
       })
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'activity_logs' }, () => {
+        if (userRole === 'super_admin') fetchActivityLogs();
+      })
       .subscribe();
 
     return () => { supabase.removeChannel(channel).catch(() => { }); };
-  }, [user, isAdmin]);
+  }, [user, isAdmin, userRole]);
 
   useEffect(() => {
     if (!selectedConvo) return;
@@ -203,6 +228,15 @@ const Admin = () => {
     setTestimonials((data as Testimonial[]) || []);
   };
 
+  const fetchActivityLogs = async () => {
+    const { data } = await supabase
+      .from('activity_logs')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(200);
+    setActivityLogs((data as ActivityLog[]) || []);
+  };
+
   const fetchProfile = async () => {
     if (!user || hasFetchedProfile.current) return;
     hasFetchedProfile.current = true;
@@ -248,6 +282,12 @@ const Admin = () => {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
     } else {
       toast({ title: 'Profile updated' });
+      logActivity({
+        action: 'profile_saved',
+        entity_type: 'profile',
+        details: `Profile saved for ${profile.full_name || user.email}`,
+        metadata: { full_name: profile.full_name, specialization: profile.specialization },
+      });
     }
   };
 
@@ -282,6 +322,13 @@ const Admin = () => {
       toast({ title: 'Error', description: 'Failed to delete message.', variant: 'destructive' });
     } else {
       setMessages(prev => prev.filter(m => m.id !== msgId));
+      logActivity({
+        action: 'chat_message_deleted',
+        entity_type: 'message',
+        entity_id: msgId,
+        details: 'Chat message deleted from conversation',
+        metadata: { conversation_id: selectedConvo },
+      });
     }
   };
 
@@ -292,8 +339,16 @@ const Admin = () => {
       .eq('id', id);
 
     if (!error) {
+      const convo = conversations.find(c => c.id === id);
       toast({ title: 'Consultation resolved' });
       fetchConversations();
+      logActivity({
+        action: 'conversation_resolved',
+        entity_type: 'conversation',
+        entity_id: id,
+        details: `Conversation with ${convo?.visitor_name || 'visitor'} marked as resolved`,
+        metadata: { visitor_name: convo?.visitor_name, visitor_phone: convo?.visitor_phone },
+      });
     }
   };
 
@@ -370,6 +425,17 @@ const Admin = () => {
     } else {
       // Auto-scroll on successful send
       setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
+      const convo = conversations.find(c => c.id === selectedConvo);
+      const msgType = trimmedReply.startsWith('[VOICE_NOTE]:') ? 'voice note' :
+        trimmedReply.startsWith('[IMAGE]:') ? 'image' :
+        trimmedReply.startsWith('[VIDEO_CALL]:') ? 'video call link' : 'text message';
+      logActivity({
+        action: 'chat_reply_sent',
+        entity_type: 'conversation',
+        entity_id: selectedConvo,
+        details: `Sent ${msgType} to ${convo?.visitor_name || 'visitor'}`,
+        metadata: { visitor_name: convo?.visitor_name, message_type: msgType },
+      });
     }
   };
 
@@ -481,6 +547,13 @@ const Admin = () => {
 
       if (error) throw error;
 
+      logActivity({
+        action: 'profile_deleted',
+        entity_type: 'profile',
+        details: `Professional profile deleted for ${profile.full_name || user.email}`,
+        metadata: { full_name: profile.full_name },
+      });
+
       // Reset local state
       setProfile({
         id: crypto.randomUUID(),
@@ -534,6 +607,15 @@ const Admin = () => {
 
     if (!error) {
       toast({ title: editingProduct ? 'Product Updated' : 'Product Added' });
+      logActivity({
+        action: editingProduct ? 'product_updated' : 'product_added',
+        entity_type: 'product',
+        entity_id: editingProduct?.id,
+        details: editingProduct
+          ? `Product "${newProduct.name_en}" updated`
+          : `New product "${newProduct.name_en}" added to inventory`,
+        metadata: { name_en: newProduct.name_en, category: newProduct.category, price: newProduct.price },
+      });
       setNewProduct({
         name_en: '', name_rk: '', name_rn: '',
         description_en: '', description_rk: '', description_rn: '',
@@ -548,26 +630,54 @@ const Admin = () => {
   };
 
   const deleteProduct = async (id: string) => {
-    await supabase.from('products').delete().eq('id', id);
+    const product = products.find(p => p.id === id);
+    const { error } = await supabase.from('products').delete().eq('id', id);
+    if (!error) {
+      logActivity({
+        action: 'product_deleted',
+        entity_type: 'product',
+        entity_id: id,
+        details: `Product "${product?.name_en || id}" removed from inventory`,
+        metadata: { name_en: product?.name_en, category: product?.category },
+      });
+    }
     fetchProducts();
   };
 
   const approveTestimonial = async (id: string, currentStatus: boolean) => {
+    const testimonial = testimonials.find(t => t.id === id);
     const { error } = await supabase.from('testimonials').update({ is_approved: !currentStatus }).eq('id', id);
     if (error) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
     } else {
       toast({ title: currentStatus ? 'Testimonial Hidden' : 'Testimonial Approved' });
+      logActivity({
+        action: currentStatus ? 'testimonial_hidden' : 'testimonial_approved',
+        entity_type: 'testimonial',
+        entity_id: id,
+        details: currentStatus
+          ? `Testimonial from "${testimonial?.name}" hidden from public view`
+          : `Testimonial from "${testimonial?.name}" approved and published`,
+        metadata: { author: testimonial?.name, location: testimonial?.location },
+      });
       fetchTestimonials();
     }
   };
 
   const deleteTestimonial = async (id: string) => {
+    const testimonial = testimonials.find(t => t.id === id);
     const { error } = await supabase.from('testimonials').delete().eq('id', id);
     if (error) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
     } else {
       toast({ title: 'Testimonial Deleted' });
+      logActivity({
+        action: 'testimonial_deleted',
+        entity_type: 'testimonial',
+        entity_id: id,
+        details: `Testimonial from "${testimonial?.name || 'unknown'}" permanently deleted`,
+        metadata: { author: testimonial?.name, location: testimonial?.location },
+      });
       fetchTestimonials();
     }
   };
@@ -647,6 +757,11 @@ const Admin = () => {
             <TabsTrigger value="profile" className="h-10 md:h-12 flex-1 md:flex-none rounded-lg md:rounded-[2.5rem] px-3 md:px-10 text-[10px] md:text-base font-bold uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xl transition-all">
               <UserCircle className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-5 md:w-5" /> Portfolio
             </TabsTrigger>
+            {userRole === 'super_admin' && (
+              <TabsTrigger value="activity" className="h-10 md:h-12 flex-1 md:flex-none rounded-lg md:rounded-[2.5rem] px-3 md:px-10 text-[10px] md:text-base font-bold uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xl transition-all">
+                <ClipboardList className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-5 md:w-5" /> Activity Log
+              </TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="conversations" className="animate-in fade-in slide-in-from-right-8 duration-1000">
@@ -1410,6 +1525,105 @@ const Admin = () => {
               </div>
             )}
           </TabsContent>
+          {userRole === 'super_admin' && (
+            <TabsContent value="activity" className="animate-in fade-in slide-in-from-bottom-8 duration-1000">
+              <div className="mb-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8 border-b border-foreground/5 pb-12">
+                <div className="text-center sm:text-left">
+                  <h2 className="font-display text-4xl md:text-6xl font-bold text-foreground uppercase tracking-tight">Activity Log</h2>
+                  <p className="text-primary font-bold uppercase tracking-[0.4em] text-md md:text-xl mt-3">System Event Record</p>
+                </div>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <Filter className="h-4 w-4 text-primary/40" />
+                  {['all', 'auth', 'conversation', 'message', 'product', 'testimonial', 'profile'].map(f => (
+                    <button
+                      key={f}
+                      onClick={() => setLogFilter(f)}
+                      className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
+                        logFilter === f
+                          ? 'bg-primary text-primary-foreground border-primary'
+                          : 'bg-muted/50 text-foreground/40 border-foreground/10 hover:border-primary/30'
+                      }`}
+                    >
+                      {f === 'all' ? 'All Events' : f}
+                    </button>
+                  ))}
+                  <span className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest ml-2">
+                    {activityLogs.filter(l => logFilter === 'all' || l.entity_type === logFilter).length} events
+                  </span>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                {activityLogs
+                  .filter(l => logFilter === 'all' || l.entity_type === logFilter)
+                  .map((log, idx) => {
+                    const actionColors: Record<string, string> = {
+                      admin_login: 'bg-secondary/20 text-secondary border-secondary/30',
+                      admin_logout: 'bg-foreground/10 text-foreground/50 border-foreground/20',
+                      chat_reply_sent: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+                      conversation_resolved: 'bg-secondary/20 text-secondary border-secondary/20',
+                      chat_message_deleted: 'bg-red-500/10 text-red-400 border-red-500/20',
+                      product_added: 'bg-primary/10 text-primary border-primary/20',
+                      product_updated: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
+                      product_deleted: 'bg-red-500/10 text-red-400 border-red-500/20',
+                      testimonial_approved: 'bg-secondary/20 text-secondary border-secondary/20',
+                      testimonial_hidden: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
+                      testimonial_deleted: 'bg-red-500/10 text-red-400 border-red-500/20',
+                      profile_saved: 'bg-primary/10 text-primary border-primary/20',
+                      profile_deleted: 'bg-red-500/10 text-red-400 border-red-500/20',
+                    };
+                    const colorClass = actionColors[log.action] || 'bg-muted text-foreground/40 border-foreground/10';
+                    return (
+                      <div
+                        key={log.id}
+                        className="group flex items-start gap-5 md:gap-8 bg-card rounded-2xl border border-foreground/5 p-5 md:p-7 shadow-sm hover:border-primary/10 hover:shadow-md transition-all animate-in fade-in slide-in-from-left-4 duration-500"
+                        style={{ animationDelay: `${idx * 30}ms` }}
+                      >
+                        {/* Timeline dot */}
+                        <div className="flex flex-col items-center gap-2 pt-1 shrink-0">
+                          <div className={`h-3 w-3 rounded-full border-2 ${colorClass.split(' ')[0]} ${colorClass.split(' ')[2]}`} />
+                          {idx < activityLogs.filter(l => logFilter === 'all' || l.entity_type === logFilter).length - 1 && (
+                            <div className="w-px flex-1 min-h-[20px] bg-foreground/5" />
+                          )}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center gap-3 mb-2">
+                            <Badge className={`text-[9px] font-black uppercase tracking-[0.2em] border px-3 py-1 rounded-full ${colorClass}`}>
+                              {log.action.replace(/_/g, ' ')}
+                            </Badge>
+                            {log.entity_type && (
+                              <Badge className="bg-muted text-foreground/30 border-none text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full">
+                                {log.entity_type}
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="text-sm md:text-base font-medium text-foreground/80 leading-snug">{log.details}</p>
+                          <div className="flex flex-wrap items-center gap-4 mt-3">
+                            <span className="text-[10px] font-bold text-primary/40 uppercase tracking-widest flex items-center gap-1.5">
+                              <ShieldAlert className="h-3 w-3" />
+                              {log.admin_email}
+                            </span>
+                            <span className="text-[10px] font-bold text-foreground/30 uppercase tracking-widest flex items-center gap-1.5">
+                              <Clock className="h-3 w-3" />
+                              {formatDistanceToNow(new Date(log.created_at), { addSuffix: true })}
+                              <span className="text-foreground/20">·</span>
+                              {format(new Date(log.created_at), 'MMM d, HH:mm')}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                {activityLogs.filter(l => logFilter === 'all' || l.entity_type === logFilter).length === 0 && (
+                  <div className="flex flex-col items-center justify-center py-24 opacity-10">
+                    <ClipboardList className="h-16 w-16 mb-4" />
+                    <p className="font-bold text-xl uppercase tracking-widest">No Events Recorded</p>
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+          )}
         </Tabs>
       </div>
     </div>
