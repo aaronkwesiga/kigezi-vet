@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_logs: {
+        Row: {
+          action: string
+          admin_email: string
+          admin_user_id: string | null
+          created_at: string
+          details: string
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          metadata: Json | null
+        }
+        Insert: {
+          action: string
+          admin_email?: string
+          admin_user_id?: string | null
+          created_at?: string
+          details?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          metadata?: Json | null
+        }
+        Update: {
+          action?: string
+          admin_email?: string
+          admin_user_id?: string | null
+          created_at?: string
+          details?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          metadata?: Json | null
+        }
+        Relationships: []
+      }
       chat_conversations: {
         Row: {
           created_at: string

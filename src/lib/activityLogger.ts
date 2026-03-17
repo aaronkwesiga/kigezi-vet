@@ -48,7 +48,7 @@ export async function logActivity(opts: LogActivityOptions): Promise<void> {
       entity_id: opts.entity_id ?? null,
       details: opts.details,
       metadata: opts.metadata ?? null,
-    });
+    } as any);
   } catch {
     // Logging must never crash the app
   }
