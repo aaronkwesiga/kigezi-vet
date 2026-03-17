@@ -17,6 +17,7 @@ import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import InstallPrompt from "@/components/InstallPrompt";
 
 
 
@@ -31,6 +32,7 @@ const App = () => (
             <ErrorBoundary>
               <Toaster />
               <Sonner />
+              <InstallPrompt />
               <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
 
                 <div className="flex min-h-screen flex-col">
