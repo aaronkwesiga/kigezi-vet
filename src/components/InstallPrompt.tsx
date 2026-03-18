@@ -58,7 +58,7 @@ const InstallPrompt = () => {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.9 }}
-          className="w-full max-w-md pointer-events-auto"
+          className="w-[90vw] max-w-[400px] pointer-events-auto"
         >
           <div className="w-full bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 relative overflow-hidden group">
           {/* Decorative gradient overlay */}
