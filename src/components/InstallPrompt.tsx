@@ -7,8 +7,6 @@ import { motion, AnimatePresence } from "framer-motion";
 const InstallPrompt = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const { t } = useLanguage();
-
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: any) => {
       // Prevent the mini-infobar from appearing on mobile
