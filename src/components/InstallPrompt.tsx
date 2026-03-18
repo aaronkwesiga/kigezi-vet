@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from "@/components/ui/button";
 import { X, Download, Monitor, Smartphone } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -48,9 +49,9 @@ const InstallPrompt = () => {
     localStorage.setItem('pwa-prompt-dismissed', Date.now().toString());
   };
 
-  if (!isVisible) return null;
+  if (!isVisible || typeof document === 'undefined') return null;
 
-  return (
+  return createPortal(
     <AnimatePresence>
       <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none p-4">
         <motion.div 
@@ -120,7 +121,8 @@ const InstallPrompt = () => {
         </div>
         </motion.div>
       </div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
 
