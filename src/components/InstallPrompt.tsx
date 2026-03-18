@@ -75,11 +75,11 @@ const InstallPrompt = () => {
           <div className="flex items-start gap-4">
             <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 animate-pulse">
               <img 
-                src="/pwa-192x192.png" 
+                src="pwa-192x192.png" 
                 alt="App Icon" 
                 className="w-12 h-12 rounded-lg shadow-md group-hover:scale-110 transition-transform duration-300"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/favicon.svg';
+                  (e.target as HTMLImageElement).src = 'favicon.svg';
                 }}
               />
             </div>
