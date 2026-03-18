@@ -54,13 +54,14 @@ const InstallPrompt = () => {
 
   return (
     <AnimatePresence>
-      <motion.div 
-        initial={{ opacity: 0, y: 50, scale: 0.9 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 50, scale: 0.9 }}
-        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-md"
-      >
-        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 relative overflow-hidden group">
+      <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none p-4 w-screen h-screen">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          className="w-full max-w-md pointer-events-auto"
+        >
+          <div className="w-full bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 relative overflow-hidden group">
           {/* Decorative gradient overlay */}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/50 via-primary to-primary/50" />
           
@@ -119,7 +120,8 @@ const InstallPrompt = () => {
             <span>Free • No storage limit • Updates automatically</span>
           </div>
         </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </AnimatePresence>
   );
 };
