@@ -2,14 +2,17 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { t } from '@/lib/i18n';
 import { supabase } from '@/integrations/supabase/client';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Send, Mic, MicOff, Square, Volume2, VolumeX, Terminal, Lock, Check, CheckCheck, Trash2, Sparkles, Loader2, Camera, Image, UserCircle } from 'lucide-react';
+import { Send, Mic, MicOff, Square, Volume2, VolumeX, Terminal, Lock, Check, CheckCheck, Trash2, Sparkles, Loader2, Camera, Image, UserCircle, Smile } from 'lucide-react';
 import { format, isToday, isYesterday, startOfDay } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import EmojiPicker from 'emoji-picker-react';
 
 import { Video } from 'lucide-react';
 import ConsultationBackground from '@/components/ConsultationBackground';
@@ -38,6 +41,7 @@ interface ISpeechRecognition extends EventTarget {
 const Chat = () => {
   const { lang } = useLanguage();
   const { user, loading: authLoading } = useAuth();
+  const { theme } = useTheme();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -654,9 +658,24 @@ const Chat = () => {
               {isRecording ? <Square className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
             </Button>
 
-            <div className="flex-1 bg-white dark:bg-[#2a3942] rounded-2xl md:rounded-[1.5rem] px-4 py-2 md:py-3 shadow-md border border-black/5 relative">
+            <div className="flex-1 bg-white dark:bg-[#2a3942] rounded-2xl md:rounded-[1.5rem] px-2 md:px-4 py-2 md:py-3 shadow-md border border-black/5 relative flex items-center">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button type="button" variant="ghost" size="icon" className="h-8 w-8 md:h-10 md:w-10 rounded-full text-foreground/40 hover:text-primary hover:bg-primary/5 transition-all shrink-0 mr-1 md:mr-2">
+                    <Smile className="h-5 w-5 md:h-6 md:w-6" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent side="top" align="start" className="w-auto p-0 border-none shadow-2xl mb-4 bg-transparent">
+                  <EmojiPicker 
+                    onEmojiClick={(e) => setInput(prev => prev + e.emoji)} 
+                    theme={theme === 'dark' ? 'dark' : 'light'}
+                    lazyLoadEmojis={true}
+                  />
+                </PopoverContent>
+              </Popover>
+
               {isRecording ? (
-                <div className="flex items-center gap-3 px-2 py-1">
+                <div className="flex items-center gap-3 px-2 py-1 flex-1">
                   <span className="h-3 w-3 rounded-full bg-red-500 animate-pulse" />
                   <span className="text-sm md:text-base font-bold text-red-500 uppercase tracking-widest">
                     Recording: {Math.floor(recordingSeconds / 60)}:{(recordingSeconds % 60).toString().padStart(2, '0')}
@@ -667,7 +686,7 @@ const Chat = () => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder={lang === 'en' ? "Type a response..." : lang === 'rk' ? "Handiika eky'okugaruramu..." : "Andika igisubizo..."}
-                  className="bg-transparent border-none focus:ring-0 text-sm md:text-base text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400 py-1"
+                  className="bg-transparent border-none focus:ring-0 text-sm md:text-base text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400 py-1 flex-1 px-0"
                   maxLength={5000}
                 />
               )}
