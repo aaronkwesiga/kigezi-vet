@@ -14,6 +14,142 @@ export type Database = {
   }
   public: {
     Tables: {
+      farmers: {
+        Row: {
+          id: string
+          full_name: string
+          phone_number: string | null
+          village: string | null
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          full_name: string
+          phone_number?: string | null
+          village?: string | null
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          full_name?: string
+          phone_number?: string | null
+          village?: string | null
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      livestock: {
+        Row: {
+          id: string
+          farmer_id: string
+          species: string
+          breed: string | null
+          identifier: string | null
+          gender: string | null
+          date_of_birth: string | null
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          farmer_id: string
+          species: string
+          breed?: string | null
+          identifier?: string | null
+          gender?: string | null
+          date_of_birth?: string | null
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          farmer_id?: string
+          species?: string
+          breed?: string | null
+          identifier?: string | null
+          gender?: string | null
+          date_of_birth?: string | null
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "livestock_farmer_id_fkey"
+            columns: ["farmer_id"]
+            isOneToOne: false
+            referencedRelation: "farmers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      medical_records: {
+        Row: {
+          id: string
+          livestock_id: string
+          visit_date: string
+          symptoms: string
+          diagnosis: string
+          treatment_given: string
+          medications_used: string | null
+          cost: number | null
+          next_visit_date: string | null
+          vet_id: string | null
+          vet_name: string | null
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          livestock_id: string
+          visit_date?: string
+          symptoms?: string
+          diagnosis?: string
+          treatment_given?: string
+          medications_used?: string | null
+          cost?: number | null
+          next_visit_date?: string | null
+          vet_id?: string | null
+          vet_name?: string | null
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          livestock_id?: string
+          visit_date?: string
+          symptoms?: string
+          diagnosis?: string
+          treatment_given?: string
+          medications_used?: string | null
+          cost?: number | null
+          next_visit_date?: string | null
+          vet_id?: string | null
+          vet_name?: string | null
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medical_records_livestock_id_fkey"
+            columns: ["livestock_id"]
+            isOneToOne: false
+            referencedRelation: "livestock"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       activity_logs: {
         Row: {
           action: string
