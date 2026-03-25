@@ -10,8 +10,7 @@ import { Send, Mic, MicOff, Square, Volume2, VolumeX, Terminal, Lock, Check, Che
 import { format, isToday, isYesterday, startOfDay } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
+
 import { Video } from 'lucide-react';
 import ConsultationBackground from '@/components/ConsultationBackground';
 
@@ -218,6 +217,7 @@ const Chat = () => {
     setMessages((prev) => [...prev, newMsg]);
 
     const { error } = await supabase.from('chat_messages').insert({
+      id: tempId,
       conversation_id: conversationId,
       sender_type: 'visitor',
       message: msgText,
@@ -294,16 +294,12 @@ const Chat = () => {
       }
 
       if (autoReplyTxt) {
-        const { data: autoMsgData } = await supabase.from('chat_messages').insert({
+        await supabase.from('chat_messages').insert({
           conversation_id: conversationId,
           sender_type: 'admin',
           message: autoReplyTxt,
           is_read: true
-        }).select().single();
-
-        if (autoMsgData) {
-          setMessages(prev => [...prev, autoMsgData as Message]);
-        }
+        });
       }
     }, 1500);
   }, [conversationId, input, toast, messages, lang]);
@@ -527,21 +523,6 @@ const Chat = () => {
             </div>
           </div>
           <div className="flex gap-2">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-xl">
-                  <Calendar className="h-5 w-5" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 border-none bg-background shadow-2xl rounded-2xl" align="end">
-                <Calendar
-                  mode="single"
-                  onSelect={(date) => date && scrollToDate(date)}
-                  initialFocus
-                  className="rounded-2xl border border-primary/20"
-                />
-              </PopoverContent>
-            </Popover>
             <Button
               variant="ghost"
               size="icon"
