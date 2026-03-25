@@ -276,10 +276,10 @@ const Chat = () => {
       // Add office hours message if appropriate
       if (isAfterHours) {
         const ohMsg = lang === 'en'
-          ? "\n\n(Note: Our office is currently closed. A veterinarian will provide further human guidance at 8:00 AM.)"
+          ? "\n\n(Note: You have reached us outside standard consultation hours. An on-call veterinarian will review your case and provide further guidance as soon as possible.)"
           : lang === 'rk'
-            ? "\n\n(Manyisa: Ofiisi yaigwa ubu. Omushaho naija kukuhabura gye aha sha mbiri [8:00 AM].)"
-            : "\n\n(Menya ko ibiro bifunze ubu. Umuganga azaguha ubundi bufasha mu gitondo saa 8:00 AM.)";
+            ? "\n\n(Manyisa: Ohikire aha saaha ezitari za burijo. Omushaho w'ebitungwa naija kureeba enshonga yaawe akuhabure omukanya kake.)"
+            : "\n\n(Menya ko tugeze mu masaha atari ay'akazi asanzwe. Umuganga w'amatungo agiye gusuzuma ikibazo cyawe aguhe inama vuba bishoboka.)";
         autoReplyTxt += ohMsg;
       } else if (!advisorAdvice) {
         // Fallback for general messages during business hours if no keywords found
