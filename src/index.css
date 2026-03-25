@@ -116,6 +116,12 @@
 }
 
 @layer base {
+  html {
+    /* Base font size explicitly increased to 112.5% (approx 18px base) 
+       This scales up all tailwind rem units proportionally for better readability. */
+    font-size: 112.5%;
+  }
+
   * {
     @apply border-border;
   }
