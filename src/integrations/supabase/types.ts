@@ -18,6 +18,8 @@ export type Database = {
         Row: {
           id: string
           full_name: string
+          name?: string | null
+          email: string | null
           phone_number: string | null
           village: string | null
           notes: string | null
@@ -27,6 +29,8 @@ export type Database = {
         Insert: {
           id?: string
           full_name: string
+          name?: string | null
+          email?: string | null
           phone_number?: string | null
           village?: string | null
           notes?: string | null
@@ -36,6 +40,8 @@ export type Database = {
         Update: {
           id?: string
           full_name?: string
+          name?: string | null
+          email?: string | null
           phone_number?: string | null
           village?: string | null
           notes?: string | null

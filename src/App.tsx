@@ -17,6 +17,7 @@ import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/Dashboard";
 import InstallPrompt from "@/components/InstallPrompt";
 
 
@@ -56,6 +57,14 @@ const App = () => (
                         element={
                           <ProtectedRoute>
                             <Admin />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/dashboard"
+                        element={
+                          <ProtectedRoute>
+                            <Dashboard />
                           </ProtectedRoute>
                         }
                       />

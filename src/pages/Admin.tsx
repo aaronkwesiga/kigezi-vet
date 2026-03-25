@@ -8,12 +8,13 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LayoutDashboard, MessageSquare, Package, Plus, Trash2, Edit2, UserCircle, CheckCircle2, Send, Check, CheckCheck, X, LogOut, Zap, Mic, MicOff, Square, Volume2, Sparkles, Loader2, Camera, Image, Award, Briefcase, Clock, Video, Star, ClipboardList, Filter, ShieldAlert } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Package, Plus, Trash2, Edit2, UserCircle, CheckCircle2, Send, Check, CheckCheck, X, LogOut, Zap, Mic, MicOff, Square, Volume2, Sparkles, Loader2, Camera, Image, Award, Briefcase, Clock, Video, Star, ClipboardList, Filter, ShieldAlert, PawPrint } from 'lucide-react';
 import { format, isToday, isYesterday, startOfDay, formatDistanceToNow } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { logActivity } from '@/lib/activityLogger';
+import MedicalRecordsTab from '@/components/MedicalRecordsTab';
 
 interface Conversation {
   id: string;
@@ -762,6 +763,9 @@ const Admin = () => {
                 <ClipboardList className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-5 md:w-5" /> Activity Log
               </TabsTrigger>
             )}
+            <TabsTrigger value="medical_records" className="h-10 md:h-12 flex-1 md:flex-none rounded-lg md:rounded-[2.5rem] px-3 md:px-10 text-[10px] md:text-base font-bold uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xl transition-all">
+              <PawPrint className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-5 md:w-5" /> Clinical
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="conversations" className="animate-in fade-in slide-in-from-right-8 duration-1000">
@@ -1624,6 +1628,18 @@ const Admin = () => {
               </div>
             </TabsContent>
           )}
+
+          <TabsContent value="medical_records" className="animate-in fade-in slide-in-from-right-8 duration-1000">
+            <div className="bg-card rounded-2xl md:rounded-[2.5rem] border border-foreground/5 shadow-xl p-6 md:p-10">
+              <div className="mb-8 border-b border-foreground/5 pb-6">
+                <h3 className="flex items-center gap-3 font-display text-xl md:text-2xl font-bold text-foreground tracking-tight uppercase">
+                  <PawPrint className="h-5 w-5 md:h-7 md:w-7 text-primary" /> Veterinary Clinical Records
+                </h3>
+                <p className="text-sm text-foreground/40 font-medium mt-1">Manage farmers, livestock registry, and medical treatment history.</p>
+              </div>
+              <MedicalRecordsTab />
+            </div>
+          </TabsContent>
         </Tabs>
       </div>
     </div>

@@ -17,6 +17,7 @@ import { format } from 'date-fns';
 interface Farmer {
   id: string;
   full_name: string;
+  email: string | null;
   phone_number: string | null;
   village: string | null;
   notes: string | null;
@@ -62,7 +63,7 @@ const SPECIES_ICON: Record<string, string> = {
 
 // ─── Sub-forms ────────────────────────────────────────────────────────────────
 
-const BLANK_FARMER = { full_name: '', phone_number: '', village: '', notes: '' };
+const BLANK_FARMER = { full_name: '', email: '', phone_number: '', village: '', notes: '' };
 const BLANK_ANIMAL = { species: 'Cattle', breed: '', identifier: '', gender: 'N/A', date_of_birth: '', notes: '' };
 const BLANK_RECORD = {
   visit_date: new Date().toISOString().slice(0, 16),
@@ -150,14 +151,21 @@ export default function MedicalRecordsTab() {
 
   const openFarmerForm = (farmer?: Farmer) => {
     setEditingFarmer(farmer || null);
-    setFarmerForm(farmer ? { full_name: farmer.full_name, phone_number: farmer.phone_number || '', village: farmer.village || '', notes: farmer.notes || '' } : BLANK_FARMER);
+    setFarmerForm(farmer ? { full_name: farmer.full_name, email: farmer.email || '', phone_number: farmer.phone_number || '', village: farmer.village || '', notes: farmer.notes || '' } : BLANK_FARMER);
     setShowFarmerForm(true);
   };
 
   const saveFarmer = async () => {
     if (!farmerForm.full_name.trim()) { toast({ title: 'Name required', variant: 'destructive' }); return; }
     setSaving(true);
-    const payload = { full_name: farmerForm.full_name.trim(), phone_number: farmerForm.phone_number || null, village: farmerForm.village || null, notes: farmerForm.notes || null };
+    const payload = { 
+      full_name: farmerForm.full_name.trim(), 
+      name: farmerForm.full_name.trim(), // Accommodate pre-existing column constraint
+      email: farmerForm.email || null, 
+      phone_number: farmerForm.phone_number || null, 
+      village: farmerForm.village || null, 
+      notes: farmerForm.notes || null 
+    };
     let error;
     if (editingFarmer) {
       ({ error } = await supabase.from('farmers').update(payload).eq('id', editingFarmer.id));
@@ -323,6 +331,10 @@ export default function MedicalRecordsTab() {
                   <Input value={farmerForm.full_name} onChange={e => setFarmerForm(f => ({ ...f, full_name: e.target.value }))} placeholder="John Tumusiime" className="h-11 rounded-xl bg-muted border-foreground/10" />
                 </div>
                 <div className="space-y-1">
+                  <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">User Email (For Login)</label>
+                  <Input type="email" value={farmerForm.email} onChange={e => setFarmerForm(f => ({ ...f, email: e.target.value }))} placeholder="farmer@example.com" className="h-11 rounded-xl bg-muted border-foreground/10" />
+                </div>
+                <div className="space-y-1">
                   <label className="text-xs font-bold uppercase tracking-widest text-foreground/50">Phone</label>
                   <Input value={farmerForm.phone_number} onChange={e => setFarmerForm(f => ({ ...f, phone_number: e.target.value }))} placeholder="+256 700 000000" className="h-11 rounded-xl bg-muted border-foreground/10" />
                 </div>
@@ -356,7 +368,7 @@ export default function MedicalRecordsTab() {
                   <div className="h-12 w-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-xl shadow">{farmer.full_name.charAt(0).toUpperCase()}</div>
                   <div>
                     <p className="font-bold text-lg uppercase tracking-tight">{farmer.full_name}</p>
-                    <p className="text-sm text-foreground/40 font-medium">{[farmer.phone_number, farmer.village].filter(Boolean).join(' · ')}</p>
+                    <p className="text-sm text-foreground/40 font-medium">{[farmer.email, farmer.phone_number, farmer.village].filter(Boolean).join(' · ')}</p>
                   </div>
                 </button>
                 <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">

@@ -132,6 +132,17 @@ const Navbar = () => {
               )}
             </Link>
           )}
+          {user && !isAdmin && (
+            <Link
+              to="/dashboard"
+              className={`text-[9px] md:text-xs lg:text-sm font-bold uppercase tracking-[0.2em] transition-all hover:text-primary relative group/nav ${isActive('/dashboard')
+                ? 'text-primary scale-105 underline decoration-primary/30 decoration-2 underline-offset-8'
+                : 'text-foreground/60'
+                }`}
+            >
+              My Records
+            </Link>
+          )}
         </div>
 
         <div className="flex items-center gap-2.5 md:gap-3.5">
@@ -226,9 +237,18 @@ const Navbar = () => {
             <Link
               to="/admin"
               onClick={() => setMobileOpen(false)}
-              className="block text-2xl md:text-3xl font-bold uppercase tracking-tight text-foreground/30"
+              className="block text-2xl md:text-3xl font-bold uppercase tracking-tight text-foreground/30 hover:text-primary"
             >
               {t('admin.dashboard', lang)}
+            </Link>
+          )}
+          {user && !isAdmin && (
+            <Link
+              to="/dashboard"
+              onClick={() => setMobileOpen(false)}
+              className="block text-2xl md:text-3xl font-bold uppercase tracking-tight text-foreground/30 hover:text-primary"
+            >
+              My Records
             </Link>
           )}
 
