@@ -148,9 +148,9 @@ const Login = () => {
                       <Input
                         type="email"
                         value={farmerEmail}
-                        onChange={(e) => setFarmerEmail(e.target.value)}
-                        placeholder="UPLINK@FARM.COM"
-                        className="h-12 md:h-14 pl-14 md:pl-16 rounded-lg md:rounded-xl bg-background border border-foreground/5 text-xs md:text-base font-medium text-foreground focus:border-primary focus:ring-0 uppercase transition-all placeholder:text-foreground/20"
+                        onChange={(e) => setFarmerEmail(e.target.value.toLowerCase())}
+                        placeholder="uplink@farm.com"
+                        className="h-12 md:h-14 pl-14 md:pl-16 rounded-lg md:rounded-xl bg-background border border-foreground/5 text-xs md:text-base font-medium text-foreground focus:border-primary focus:ring-0 transition-all placeholder:text-foreground/20"
                         required
                       />
                     </div>
@@ -205,9 +205,9 @@ const Login = () => {
                       <Input
                         type="email"
                         value={adminEmail}
-                        onChange={(e) => setAdminEmail(e.target.value)}
-                        placeholder="CMD@KIGEZI.VET"
-                        className="h-12 md:h-14 pl-14 md:pl-16 rounded-lg md:rounded-xl bg-background border border-foreground/5 text-xs md:text-base font-medium text-foreground focus:border-primary focus:ring-0 uppercase transition-all placeholder:text-foreground/20"
+                        onChange={(e) => setAdminEmail(e.target.value.toLowerCase())}
+                        placeholder="cmd@kigezi.vet"
+                        className="h-12 md:h-14 pl-14 md:pl-16 rounded-lg md:rounded-xl bg-background border border-foreground/5 text-xs md:text-base font-medium text-foreground focus:border-primary focus:ring-0 transition-all placeholder:text-foreground/20"
                         required
                       />
                     </div>
