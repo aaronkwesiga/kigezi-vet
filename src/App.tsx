@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
@@ -39,6 +39,7 @@ const App = () => (
                   <Navbar />
                   <main className="flex-1">
                     <Routes>
+                      <Route path="/" element={<Index />} />
                       <Route index element={<Index />} />
                       <Route path="/products" element={<Products />} />
                       <Route
@@ -67,13 +68,11 @@ const App = () => (
                           </ProtectedRoute>
                         }
                       />
-                      <Route path="*" element={<NotFound />} />
-
+                      <Route path="*" element={<Index />} />
                     </Routes>
                   </main>
                   <Footer />
                 </div>
-
               </HashRouter>
             </ErrorBoundary>
           </ThemeProvider>
