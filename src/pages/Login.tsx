@@ -142,7 +142,7 @@ const Login = () => {
                   )}
 
                   <div className="space-y-2.5 md:space-y-3">
-                    <label className="ml-4 md:ml-6 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-primary/40">Signal Address (Email)</label>
+                    <label className="ml-4 md:ml-6 text-[9px] md:text-[10px] font-bold lowercase tracking-[0.4em] text-primary/40">signal address (email)</label>
                     <div className="relative">
                       <Mail className="absolute left-5 md:left-6 top-1/2 -translate-y-1/2 h-5 w-5 md:h-6 md:w-6 text-foreground/10" />
                       <Input
@@ -199,7 +199,7 @@ const Login = () => {
 
                 <form onSubmit={handleAdminLogin} className="space-y-6 md:space-y-8">
                   <div className="space-y-2.5 md:space-y-3">
-                    <label className="ml-4 md:ml-6 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-primary/40">Admin Identity</label>
+                    <label className="ml-4 md:ml-6 text-[9px] md:text-[10px] font-bold lowercase tracking-[0.4em] text-primary/40">admin identity</label>
                     <div className="relative">
                       <Mail className="absolute left-5 md:left-6 top-1/2 -translate-y-1/2 h-5 w-5 md:h-6 md:w-6 text-foreground/10" />
                       <Input
@@ -207,7 +207,7 @@ const Login = () => {
                         value={adminEmail}
                         onChange={(e) => setAdminEmail(e.target.value.toLowerCase())}
                         placeholder="cmd@kigezi.vet"
-                        className="h-12 md:h-14 pl-14 md:pl-16 rounded-lg md:rounded-xl bg-background border border-foreground/5 text-xs md:text-base font-medium text-foreground focus:border-primary focus:ring-0 transition-all placeholder:text-foreground/20"
+                        className="h-12 md:h-14 pl-14 md:pl-16 rounded-lg md:rounded-xl bg-background border border-foreground/5 text-xs md:text-base font-medium text-foreground focus:border-primary focus:ring-0 lowercase transition-all placeholder:text-foreground/20"
                         required
                       />
                     </div>
