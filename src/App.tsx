@@ -34,13 +34,12 @@ const App = () => (
               <Toaster />
               <Sonner />
               <InstallPrompt />
-              <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-
+              <HashRouter>
                 <div className="flex min-h-screen flex-col">
                   <Navbar />
                   <main className="flex-1">
                     <Routes>
-                      <Route path="/" element={<Index />} />
+                      <Route index element={<Index />} />
                       <Route path="/products" element={<Products />} />
                       <Route
                         path="/chat"
