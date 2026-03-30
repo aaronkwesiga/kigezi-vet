@@ -14,9 +14,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import ConsultationBackground from '@/components/ConsultationBackground';
 
-// ── Admin invite code (change this to something secret in production) ──────────
-const ADMIN_INVITE_CODE = 'KIGEZI-VET-ADMIN-2026';
-
 // ─────────────────────────────────────────────────────────────────────────────
 const Login = () => {
   const { lang } = useLanguage();
@@ -43,7 +40,6 @@ const Login = () => {
   const [asuName, setAsuName] = useState('');
   const [asuEmail, setAsuEmail] = useState('');
   const [asuPassword, setAsuPassword] = useState('');
-  const [asuCode, setAsuCode] = useState('');
   const [asuLoading, setAsuLoading] = useState(false);
 
   // ── Farmer handlers ─────────────────────────────────────────────────────────
@@ -108,10 +104,6 @@ const Login = () => {
   // ── Admin-signup handler ────────────────────────────────────────────────────
   const handleAdminSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (asuCode.trim().toUpperCase() !== ADMIN_INVITE_CODE) {
-      toast({ title: 'Access Denied', description: t('auth.inviteCodeInvalid', lang), variant: 'destructive' });
-      return;
-    }
     if (!asuName.trim()) {
       toast({ title: 'Error', description: t('auth.nameRequired', lang), variant: 'destructive' });
       return;
@@ -132,7 +124,7 @@ const Login = () => {
         });
       }
       toast({ title: t('auth.adminSignupSuccess', lang), description: "Account created! Please verify your email, then wait for the Main Admin to approve your account." });
-      setAsuName(''); setAsuEmail(''); setAsuPassword(''); setAsuCode('');
+      setAsuName(''); setAsuEmail(''); setAsuPassword('');
     }
   };
 
@@ -362,22 +354,11 @@ const Login = () => {
                     {t('auth.adminSignup', lang)}
                   </h2>
                   <p className="text-[10px] md:text-xs font-medium text-foreground/40 uppercase tracking-widest">
-                    Restricted • Valid invite code required
+                    Restricted • Admin Approval Required
                   </p>
                 </div>
 
                 <form onSubmit={handleAdminSignup} className="space-y-6">
-                  {/* Invite Code */}
-                  <div className="space-y-2.5">
-                    <label className={labelCls}>{t('auth.inviteCode', lang)}</label>
-                    <div className="relative">
-                      <Hash className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/10" />
-                      <Input value={asuCode} onChange={e => setAsuCode(e.target.value)}
-                        placeholder={t('auth.inviteCodePlaceholder', lang)}
-                        className={inputCls} required />
-                    </div>
-                  </div>
-
                   {/* Full Name */}
                   <div className="space-y-2.5">
                     <label className={labelCls}>Full Name</label>

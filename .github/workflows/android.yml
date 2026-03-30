@@ -5,6 +5,11 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+# Cancel any in-progress build when a new push arrives
+concurrency:
+  group: android-build
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
@@ -23,15 +28,15 @@ jobs:
           cache: 'npm'
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build Web App
         run: npm run build
         env:
-          VITE_SUPABASE_PROJECT_ID: "${{ vars.VITE_SUPABASE_PROJECT_ID || secrets.VITE_SUPABASE_PROJECT_ID }}"
-          VITE_SUPABASE_PUBLISHABLE_KEY: "${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY || secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}"
-          VITE_SUPABASE_URL: "${{ vars.VITE_SUPABASE_URL || secrets.VITE_SUPABASE_URL }}"
-          VITE_GEMINI_API_KEY: "${{ vars.VITE_GEMINI_API_KEY || secrets.VITE_GEMINI_API_KEY }}"
+          VITE_SUPABASE_PROJECT_ID: ${{ secrets.VITE_SUPABASE_PROJECT_ID }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -42,6 +47,15 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('android/**/*.gradle*', 'android/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: gradle-
+
       - name: Sync Android Platform
         run: npx cap sync android
 
@@ -49,14 +63,22 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK to Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: mobile-latest
-          name: Latest Mobile App Form
-          body: Latest APK generated automatically from GitHub Actions. Re-download to get latest updates.
+          name: "Kigezi Vet – Latest APK"
+          body: |
+            📱 **Latest Android APK** — built automatically from commit `${{ github.sha }}`.
+
+            **How to install:**
+            1. Download the `.apk` file below.
+            2. On your Android phone, enable *Install from unknown sources* in Settings → Security.
+            3. Open the downloaded file and tap **Install**.
+
+            > Re-download this file whenever you want the latest update.
           prerelease: false
           files: android/app/build/outputs/apk/debug/*.apk
         env:
