@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { Session, User, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
-export type UserRole = 'super_admin' | 'staff_admin' | 'farmer' | null;
+export type UserRole = 'super_admin' | 'staff_admin' | 'farmer' | 'pending_admin' | null;
 
 interface AuthContextType {
   session: Session | null;
@@ -11,7 +11,7 @@ interface AuthContextType {
   isAdmin: boolean;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
-  signUp: (email: string, password: string, fullName: string) => Promise<{ error: AuthError | null }>;
+  signUp: (email: string, password: string, fullName: string) => Promise<{ data?: any; error: AuthError | null }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: AuthError | null }>;
   updatePassword: (newPassword: string) => Promise<{ error: AuthError | null }>;
@@ -56,6 +56,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         finalRole = (dbRole === 'admin' ? 'staff_admin' : dbRole as UserRole);
       } else if (email?.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) {
         finalRole = 'super_admin';
+      } else {
+        // Check if they are waiting for admin approval
+        const { data: request } = await supabase
+          .from('admin_requests')
+          .select('status')
+          .eq('user_id', userId)
+          .maybeSingle();
+
+        if (request?.status === 'pending') {
+          finalRole = 'pending_admin';
+        }
       }
 
       if (finalRole !== userRole) {
@@ -103,7 +114,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -111,7 +122,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         emailRedirectTo: `${window.location.origin}/#/login`,
       },
     });
-    return { error };
+    return { data, error };
   };
 
   const signOut = async () => {

@@ -79,6 +79,15 @@ interface ActivityLog {
   created_at: string;
 }
 
+interface AdminRequest {
+  id: string;
+  user_id: string;
+  email: string;
+  full_name: string;
+  status: string;
+  created_at: string;
+}
+
 const Admin = () => {
   const { user, userRole, isAdmin, loading: authLoading, signOut } = useAuth();
   const { lang } = useLanguage();
@@ -91,6 +100,7 @@ const Admin = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [activityLogs, setActivityLogs] = useState<ActivityLog[]>([]);
+  const [adminRequests, setAdminRequests] = useState<AdminRequest[]>([]);
   const [logFilter, setLogFilter] = useState<string>('all');
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [newProduct, setNewProduct] = useState({
@@ -122,7 +132,10 @@ const Admin = () => {
     fetchProducts();
     fetchProfile();
     fetchTestimonials();
-    if (userRole === 'super_admin') fetchActivityLogs();
+    if (userRole === 'super_admin') {
+      fetchActivityLogs();
+      fetchAdminRequests();
+    }
 
     logActivity({
       action: 'admin_login',
@@ -236,6 +249,34 @@ const Admin = () => {
       .order('created_at', { ascending: false })
       .limit(200);
     setActivityLogs((data as ActivityLog[]) || []);
+  };
+
+  const fetchAdminRequests = async () => {
+    const { data } = await supabase
+      .from('admin_requests')
+      .select('*')
+      .order('created_at', { ascending: false });
+    setAdminRequests((data as AdminRequest[]) || []);
+  };
+
+  const updateAdminRequest = async (id: string, newStatus: string) => {
+    const { error } = await supabase
+      .from('admin_requests')
+      .update({ status: newStatus })
+      .eq('id', id);
+    if (error) {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+    } else {
+      toast({ title: `Request ${newStatus}` });
+      fetchAdminRequests();
+      logActivity({
+        action: `admin_request_${newStatus}`,
+        entity_type: 'auth',
+        entity_id: id,
+        details: `Admin request for was ${newStatus}`,
+        metadata: { request_id: id, new_status: newStatus },
+      });
+    }
   };
 
   const fetchProfile = async () => {
@@ -688,8 +729,19 @@ const Admin = () => {
   if (!isAdmin) return (
     <div className="flex min-h-screen items-center justify-center bg-background px-6">
       <div className="text-center glass p-10 md:p-20 rounded-[3rem] md:rounded-[5rem] border-primary max-w-2xl shadow-2xl">
-        <h1 className="mb-6 font-display text-4xl md:text-7xl lg:text-8xl font-bold tracking-tight text-primary uppercase leading-tight">Restricted</h1>
-        <p className="text-foreground text-lg md:text-2xl font-medium mb-12 uppercase tracking-widest leading-none">Admin Authorization Required</p>
+        {userRole === 'pending_admin' ? (
+          <>
+            <h1 className="mb-6 font-display text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-primary uppercase leading-tight">Pending</h1>
+            <p className="text-foreground text-lg md:text-xl font-medium mb-12 uppercase tracking-widest leading-relaxed">
+              Your staff account has been created. Please wait for the Super Admin to authorize your access.
+            </p>
+          </>
+        ) : (
+          <>
+            <h1 className="mb-6 font-display text-4xl md:text-7xl lg:text-8xl font-bold tracking-tight text-primary uppercase leading-tight">Restricted</h1>
+            <p className="text-foreground text-lg md:text-2xl font-medium mb-12 uppercase tracking-widest leading-none">Admin Authorization Required</p>
+          </>
+        )}
         <Button onClick={() => signOut()} className="h-16 md:h-24 px-10 md:px-16 rounded-2xl md:rounded-[2.5rem] font-bold uppercase tracking-[0.4em] gap-4 bg-secondary hover:brightness-110 text-white shadow-2xl transition-all text-lg md:text-xl border border-white/10">
           <LogOut className="h-6 w-6 md:h-8 md:w-8" /> Sign Out
         </Button>
@@ -763,10 +815,68 @@ const Admin = () => {
                 <ClipboardList className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-5 md:w-5" /> Activity Log
               </TabsTrigger>
             )}
-            <TabsTrigger value="medical_records" className="h-10 md:h-12 flex-1 md:flex-none rounded-lg md:rounded-[2.5rem] px-3 md:px-10 text-[10px] md:text-base font-bold uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xl transition-all">
-              <PawPrint className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-5 md:w-5" /> Clinical
-            </TabsTrigger>
+            {userRole === 'super_admin' && (
+              <TabsTrigger value="approvals" className="h-10 md:h-12 flex-1 md:flex-none rounded-lg md:rounded-[2.5rem] px-3 md:px-10 text-[10px] md:text-base font-bold uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-xl transition-all relative">
+                <ShieldAlert className="mr-2 md:mr-3 h-3.5 w-3.5 md:h-5 md:w-5" /> Approvals
+                {adminRequests.filter(r => r.status === 'pending').length > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-4 w-4 bg-destructive"></span>
+                  </span>
+                )}
+              </TabsTrigger>
+            )}
           </TabsList>
+
+          <TabsContent value="approvals" className="animate-in fade-in slide-in-from-bottom-8 duration-1000 space-y-8">
+            <div className="bg-card rounded-2xl md:rounded-[3rem] p-6 md:p-12 shadow-2xl border border-foreground/5 relative overflow-hidden">
+              <div className="flex items-center gap-4 mb-8 md:mb-12 relative z-10">
+                <div className="h-12 w-12 md:h-16 md:w-16 bg-primary/10 rounded-xl md:rounded-2xl flex items-center justify-center border border-primary/20">
+                  <ShieldAlert className="h-6 w-6 md:h-8 md:w-8 text-primary" />
+                </div>
+                <div>
+                  <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tight text-foreground">Staff Approvals</h2>
+                  <p className="text-xs md:text-sm font-bold text-foreground/40 uppercase tracking-[0.2em] mt-1">Pending Admin Access Requests</p>
+                </div>
+              </div>
+
+              <div className="grid gap-6 lg:grid-cols-2 relative z-10">
+                {adminRequests.length === 0 ? (
+                  <div className="col-span-1 lg:col-span-2 text-center py-20 px-6 opacity-40 mix-blend-luminosity">
+                    <ShieldAlert className="h-20 w-20 md:h-24 md:w-24 mx-auto mb-6 text-primary grayscale" />
+                    <p className="text-xl md:text-2xl font-black tracking-widest uppercase">No pending requests</p>
+                    <p className="text-sm font-semibold mt-2 uppercase tracking-[0.2em]">The security log is completely clear</p>
+                  </div>
+                ) : adminRequests.map(request => (
+                  <div key={request.id} className="relative bg-muted/30 group rounded-xl md:rounded-2xl p-6 md:p-8 border-2 border-primary/10 transition-all hover:bg-muted/80 shadow-md">
+                    <div className="flex flex-col md:flex-row gap-6 justify-between items-start md:items-center">
+                      <div>
+                        <div className="flex items-center gap-3 mb-2">
+                          <h4 className="text-xl md:text-2xl font-bold uppercase tracking-tight text-foreground">{request.full_name}</h4>
+                          <Badge className={request.status === 'pending' ? 'bg-secondary text-white' : request.status === 'approved' ? 'bg-green-500 text-white' : 'bg-destructive text-white'}>
+                            {request.status.toUpperCase()}
+                          </Badge>
+                        </div>
+                        <p className="text-sm font-bold text-foreground/60 tracking-[0.1em]">{request.email}</p>
+                        <p className="text-[10px] font-bold text-foreground/30 uppercase tracking-[0.2em] mt-2">Requested {formatDistanceToNow(new Date(request.created_at))} ago</p>
+                      </div>
+                      
+                      {request.status === 'pending' && (
+                        <div className="flex items-center gap-3 w-full md:w-auto mt-4 md:mt-0">
+                          <Button onClick={() => updateAdminRequest(request.id, 'approved')} className="flex-1 md:flex-none h-12 bg-green-500 hover:bg-green-600 text-white font-bold tracking-widest uppercase shadow-lg">
+                            <Check className="mr-2 h-4 w-4" /> Approve
+                          </Button>
+                          <Button onClick={() => updateAdminRequest(request.id, 'rejected')} className="flex-1 md:flex-none h-12 bg-destructive hover:bg-destructive/80 text-white font-bold tracking-widest uppercase shadow-lg">
+                            <X className="mr-2 h-4 w-4" /> Reject
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </TabsContent>
 
           <TabsContent value="conversations" className="animate-in fade-in slide-in-from-right-8 duration-1000">
             <div className="grid gap-8 md:gap-10 lg:grid-cols-3 min-h-[500px] md:min-h-[700px]">

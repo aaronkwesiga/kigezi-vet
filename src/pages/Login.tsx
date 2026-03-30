@@ -8,8 +8,9 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Lock, UserPlus, Mail, Key, User, ArrowRight,
-  ShieldCheck, Zap, RotateCcw, ChevronLeft, Hash,
+  ShieldCheck, Zap, RotateCcw, ChevronLeft, Hash, LogIn, KeyRound
 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import ConsultationBackground from '@/components/ConsultationBackground';
 
@@ -68,7 +69,7 @@ const Login = () => {
         toast({ title: 'Error', description: t('auth.nameRequired', lang), variant: 'destructive' });
         setFarmerLoading(false); return;
       }
-      const { error } = await signUp(farmerEmail, farmerPassword, farmerName.trim());
+      const { data, error } = await signUp(farmerEmail, farmerPassword, farmerName.trim());
       setFarmerLoading(false);
       if (error) { toast({ title: 'Error', description: error.message, variant: 'destructive' }); }
       else { toast({ title: t('auth.checkEmail', lang), description: t('auth.verifyEmail', lang) }); }
@@ -116,12 +117,21 @@ const Login = () => {
       return;
     }
     setAsuLoading(true);
-    const { error } = await signUp(asuEmail, asuPassword, asuName.trim());
+    const { data, error } = await signUp(asuEmail, asuPassword, asuName.trim());
     setAsuLoading(false);
     if (error) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
     } else {
-      toast({ title: t('auth.adminSignupSuccess', lang), description: t('auth.verifyEmail', lang) });
+      if (data?.user) {
+        // Insert them into admin_requests
+        await supabase.from('admin_requests').insert({
+          user_id: data.user.id,
+          email: asuEmail,
+          full_name: asuName.trim(),
+          status: 'pending'
+        });
+      }
+      toast({ title: t('auth.adminSignupSuccess', lang), description: "Account created! Please verify your email, then wait for the Main Admin to approve your account." });
       setAsuName(''); setAsuEmail(''); setAsuPassword(''); setAsuCode('');
     }
   };
