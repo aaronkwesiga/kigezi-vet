@@ -22,9 +22,9 @@ const HeroSection = () => {
           <Badge className="mb-6 md:mb-8 bg-white/10 text-white border border-white/20 px-6 md:px-8 py-2 md:py-3 text-[10px] md:text-xs font-semibold uppercase tracking-[0.2em] shadow-sm backdrop-blur-md">
             {t('hero.est', lang) || 'Est. 2024'}
           </Badge>
-          <h1 className="font-display text-4xl font-black tracking-tighter text-white md:text-6xl lg:text-7xl xl:text-8xl uppercase leading-[0.95] mb-8 md:mb-10 drop-shadow-2xl">
-            {t('hero.title', lang)} <br />
-            <span className="text-white block mt-4 md:mt-8 text-xl md:text-2xl lg:text-3xl tracking-[0.4em] font-black drop-shadow-[0_4px_12px_rgba(0,0,0,1)] [text-shadow:0_0_30px_rgba(255,255,255,0.3)]">
+          <h1 className="font-display text-2xl font-black tracking-tight text-white sm:text-3xl md:text-4xl lg:text-5xl xl:text-5xl uppercase leading-[1.05] mb-8 md:mb-10 drop-shadow-2xl max-w-4xl mx-auto">
+            {t('hero.title', lang)}
+            <span className="text-white block mt-3 md:mt-5 text-sm md:text-base lg:text-lg tracking-[0.25em] font-bold drop-shadow-[0_4px_12px_rgba(0,0,0,1)] [text-shadow:0_0_30px_rgba(255,255,255,0.3)] opacity-80">
               {t('hero.subtitle', lang)}
             </span>
           </h1>
