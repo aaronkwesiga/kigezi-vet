@@ -13,11 +13,17 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
+  resetPassword: (email: string) => Promise<{ error: AuthError | null }>;
+  updatePassword: (newPassword: string) => Promise<{ error: AuthError | null }>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   session: null, user: null, userRole: null, isAdmin: false, loading: true,
-  signIn: async () => ({ error: null }), signUp: async () => ({ error: null }), signOut: async () => { },
+  signIn: async () => ({ error: null }),
+  signUp: async () => ({ error: null }),
+  signOut: async () => { },
+  resetPassword: async () => ({ error: null }),
+  updatePassword: async () => ({ error: null }),
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -109,24 +115,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
-    // 1. Clear all client-side storage first
     localStorage.clear();
     sessionStorage.clear();
-
-    // 2. Reset React state immediately
     setSession(null);
     setUser(null);
     setUserRole(null);
-
-    // 3. Redirect to login right away (don't wait for Supabase)
     window.location.hash = '/login';
-
-    // 4. Fire the Supabase signOut in background so the server session ends
     try {
       await supabase.auth.signOut();
     } catch (err) {
       console.warn('Supabase signOut error (safe to ignore, already redirected):', err);
     }
+  };
+
+  const resetPassword = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/#/reset-password`,
+    });
+    return { error };
+  };
+
+  const updatePassword = async (newPassword: string) => {
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    return { error };
   };
 
   return (
@@ -138,7 +149,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       loading,
       signIn,
       signUp,
-      signOut
+      signOut,
+      resetPassword,
+      updatePassword,
     }}>
       {children}
     </AuthContext.Provider>
