@@ -117,9 +117,18 @@
 
 @layer base {
   html {
-    /* Base font size explicitly increased to 112.5% (approx 18px base) 
-       This scales up all tailwind rem units proportionally for better readability. */
-    font-size: 112.5%;
+    /* 
+      Base font size explicitly set to 100% for mobile phones to prevent horizontal 
+      overflow, since Tailwind classes scale from this root font size. 
+    */
+    font-size: 100%;
+  }
+
+  @media (min-width: 768px) {
+    html {
+      /* Scales up tailwind rem units proportionally for better readability on tablet & desktop */
+      font-size: 112.5%;
+    }
   }
 
   * {
@@ -127,7 +136,7 @@
   }
 
   body {
-    @apply bg-background text-foreground transition-colors duration-500 font-sans tracking-tight;
+    @apply bg-background text-foreground transition-colors duration-500 font-sans tracking-tight overflow-x-hidden;
   }
 
   h1,
