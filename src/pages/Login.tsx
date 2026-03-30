@@ -144,13 +144,8 @@ const Login = () => {
 
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-24 relative overflow-hidden transition-colors duration-500">
+    <div className="flex min-h-screen items-center justify-center px-4 py-24 relative overflow-hidden transition-colors duration-500">
       <ConsultationBackground />
-      <div className="absolute inset-0 z-[1] bg-black/50 pointer-events-none" />
-      <div className="absolute inset-0 z-[2] pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/40" />
-        <div className="absolute top-0 left-0 h-[800px] w-[800px] bg-primary/5 blur-[200px] -ml-40 -mt-40" />
-      </div>
 
       <div className="w-full max-w-4xl relative z-10 animate-in fade-in zoom-in duration-700">
         {/* Header */}

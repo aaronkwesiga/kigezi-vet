@@ -445,8 +445,7 @@ const Chat = () => {
         {/* Dynamic Background Slideshow - Consultation Themed */}
         <ConsultationBackground />
 
-        {/* Dark Overlay for Readability */}
-        <div className="absolute inset-0 z-[1] bg-black/50 pointer-events-none" />
+        {/* Background is natural without color overlays */}
 
         <div className="w-full max-w-3xl text-center relative z-10 animate-in fade-in zoom-in duration-1000">
           <Badge className="mb-6 md:mb-10 px-8 md:px-12 py-2 md:py-3 bg-primary text-primary-foreground border-none font-black uppercase tracking-[0.4em] text-[9px] md:text-xs shadow-lg">Signal Interface</Badge>
@@ -503,7 +502,6 @@ const Chat = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4 md:p-8 relative font-sans overflow-hidden transition-colors duration-500">
       <ConsultationBackground />
-      <div className="absolute inset-0 z-[1] bg-black/50 pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-4xl h-[85dvh] md:h-[80vh] flex flex-col bg-[#efeae2] dark:bg-zinc-900 rounded-2xl md:rounded-[3rem] overflow-hidden shadow-2xl border-2 md:border-8 border-primary/20 transition-all duration-500">
         {/* WhatsApp Background Pattern Overlay */}

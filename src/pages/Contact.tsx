@@ -61,8 +61,7 @@ const Contact = () => {
   return (
     <div className="min-h-screen bg-background pt-24 pb-16 relative overflow-x-hidden transition-colors duration-500 flex flex-col items-center">
       {/* Dynamic Background Slideshow shifted to top for zero-interference */}
-      <DomesticAnimalsBackground />
-      <div className="absolute inset-0 z-0 bg-black/60 pointer-events-none" />
+      {/* Background is natural without color overlays */}
 
       <div className="w-full max-w-5xl px-4 md:px-6 relative z-10 flex flex-col items-center mx-auto">
         <div className="mb-14 text-center">

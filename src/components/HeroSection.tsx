@@ -14,8 +14,7 @@ const HeroSection = () => {
       {/* High-Visibility Domestic Animal Background */}
       <DomesticAnimalsBackground />
 
-      {/* Dark Overlay for Readability - UCU/Bukoola Style */}
-      <div className="absolute inset-0 z-[1] bg-black/50 pointer-events-none" />
+      {/* Background is natural without color overlays */}
 
       <div className="container relative z-10 mx-auto text-center">
         <div className="max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-1000">
