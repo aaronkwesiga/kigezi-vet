@@ -8,10 +8,10 @@ interface AnimatedAnimal {
 
 // THE 4 SPECIFIC IMAGES REQUESTED BY THE USER
 const SLIDESHOW_IMAGES = [
-    { src: '/calf.jpg', alt: 'Calf' },
-    { src: '/sheep.jpg', alt: 'Sheep' },
-    { src: '/goat.jpg', alt: 'Goat' },
-    { src: '/pig.jpg', alt: 'Pig' },
+    { src: 'calf.jpg', alt: 'Calf' },
+    { src: 'sheep.jpg', alt: 'Sheep' },
+    { src: 'goat.jpg', alt: 'Goat' },
+    { src: 'pig.jpg', alt: 'Pig' },
 ];
 
 const DISPLAY_DURATION = 5; // Seconds per image
