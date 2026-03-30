@@ -108,6 +108,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Helper to ensure emails don't link to the mobile app's internal localhost, 
+  // but instead point to the production GitHub Pages URL.
+  const getRedirectUrl = (hashPath: string) => {
+    let base = window.location.origin + window.location.pathname;
+    // Android Capacitor uses http://localhost as the origin. Mobile browsers 
+    // cannot open this when clicking a link from an email.
+    if (window.location.origin === 'http://localhost' || window.location.origin === 'capacitor://localhost') {
+      base = 'https://aaronkwesiga.github.io/kigezi-vet/';
+    }
+    return `${base.replace(/\/$/, '')}/#${hashPath}`;
+  };
+
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     return { error };
@@ -119,7 +131,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       password,
       options: {
         data: { full_name: fullName },
-        emailRedirectTo: `${window.location.origin}/#/login`,
+        emailRedirectTo: getRedirectUrl('/login'),
       },
     });
     return { data, error };
@@ -141,7 +153,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const resetPassword = async (email: string) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/#/reset-password`,
+      redirectTo: getRedirectUrl('/reset-password'),
     });
     return { error };
   };
