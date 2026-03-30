@@ -138,10 +138,11 @@ const Contact = () => {
                   className="absolute inset-0 h-full w-full object-cover opacity-10 grayscale"
                 />
                 <MapPin className="h-8 w-8 md:h-10 md:w-10 text-primary mb-3 relative z-10 animate-pulse" />
-                <h4 className="font-display font-bold text-lg md:text-xl text-foreground relative z-10 uppercase tracking-tight mb-1">Kigezi Vet Drugshop</h4>
+                <h4 className="font-display font-bold text-lg md:text-xl text-foreground relative z-10 uppercase tracking-tight mb-1">Kigezi Vet</h4>
+                <p className="text-[9px] font-bold uppercase tracking-widest text-primary/50 relative z-10 mb-1">Digital Veterinary Consultation Platform</p>
                 <p className="text-[10px] md:text-xs font-medium text-foreground/40 relative z-10 uppercase tracking-widest leading-none">Opposite All Saints Church, Kabale</p>
                 <a
-                  href="https://www.google.com/maps/search/?api=1&query=Kigezi+Vet+Drugshop+Kabale+Plot+50"
+                  href="https://www.google.com/maps/search/?api=1&query=Kigezi+Vet+Kabale+Plot+50"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-6 px-6 py-2.5 rounded-xl bg-primary text-primary-foreground text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] relative z-10 hover:brightness-110 transition-all shadow-md border border-white/10"

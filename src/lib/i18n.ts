@@ -114,7 +114,7 @@ const translations: Record<string, Record<Language, string>> = {
   // Testimonials
   'testimonials.title': { en: 'What Our Clients Say', rk: 'Ebi Abantu Bagamba', rn: 'Ebi Abantu Bagamba' },
   'testimonials.subtitle': { en: 'Trusted by farmers across the Kigezi region', rk: 'Abeikirizibwa abahiisa omu Kigezi yona', rn: 'Abeikirizibwa abahiisa omu Kigezi yona' },
-  'testimonials.1.text': { en: 'Kigezi Vet Drugshop saved my herd during the last outbreak. Their staff are professional and the medicine is genuine.', rk: 'Kigezi Vet Drugshop nibo bakijije ente zangye omu bwire bw\'oburwaire. Abakozi babo n\'abokwikirizibwa.', rn: 'Kigezi Vet Drugshop nibo bakijije ente zangye omu bwire bw\'oburwaire. Abakozi babo n\'abokwikirizibwa.' },
+  'testimonials.1.text': { en: 'Kigezi Vet saved my herd during the last outbreak. Their staff are professional and the medicine is genuine.', rk: 'Kigezi Vet nibo bakijije ente zangye omu bwire bw\'oburwaire. Abakozi babo n\'abokwikirizibwa.', rn: 'Kigezi Vet nibo bakijije ente zangye omu bwire bw\'oburwaire. Abakozi babo n\'abokwikirizibwa.' },
   'testimonials.1.author': { en: 'Mugisha John', rk: 'Mugisha John', rn: 'Mugisha John' },
   'testimonials.1.location': { en: 'Dairy Farmer, Kabale', rk: 'Omuhiisa, Kabale', rn: 'Omuhiisa, Kabale' },
   'testimonials.2.text': { en: 'The best veterinary shop in the region! I always get my poultry vaccines here and they never disappoint.', rk: 'Shop y\'emibazi y\'ente ekurayo omuri Kigezi! Obwire bwona nshanga emibazi y\'enkoko ekaruhura.', rn: 'Shop y\'emibazi y\'ente ekurayo omuri Kigezi! Obwire bwona nshanga emibazi y\'enkoko ekaruhura.' },

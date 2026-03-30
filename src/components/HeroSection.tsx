@@ -30,7 +30,7 @@ const HeroSection = () => {
           </h1>
           <div className="w-24 h-1 bg-secondary mx-auto mb-10 md:mb-12 rounded-full" />
           <p className="max-w-2xl mx-auto text-base md:text-lg font-bold text-white/90 tracking-widest mb-10 md:mb-14 leading-relaxed uppercase drop-shadow-md">
-            Professional Veterinary Care for the Kigezi Region
+            Expert Veterinary Consultation — Online & In-Person, Kigezi Region
           </p>
 
           <div className="flex flex-col items-center gap-5 sm:flex-row sm:justify-center">
