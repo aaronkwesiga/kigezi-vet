@@ -8,7 +8,7 @@ export const languageNames: Record<Language, string> = {
 
 const translations: Record<string, Record<Language, string>> = {
   // Global
-  'app.title': { en: 'Kigezi Vet Drugshop', rk: 'Kigezi Vet Drugshop', rn: 'Kigezi Vet Drugshop' },
+  'app.title': { en: 'Kigezi Vet - Digital Veterinary Consultation Service Platform', rk: 'Kigezi Vet - Oruhuuto rw\'Enyagiiro ya Digitoli', rn: 'Kigezi Vet - Oruhuuto rw\'Enyagiiro ya Digitoli' },
 
   // Navigation
   'nav.home': { en: 'Home', rk: 'Eka', rn: 'Eka' },
@@ -19,9 +19,9 @@ const translations: Record<string, Record<Language, string>> = {
 
   // Hero
   'hero.title': {
-    en: 'KIGEZI VET DRUGSHOP',
-    rk: 'KIGEZI VET DRUGSHOP',
-    rn: 'KIGEZI VET DRUGSHOP'
+    en: 'DIGITAL VETERINARY CONSULTATION SERVICE PLATFORM',
+    rk: 'ORUHUUTO RW\'ENYAGIIRO YA DIGITOLI',
+    rn: 'ORUHUUTO RW\'ENYAGIIRO YA DIGITOLI'
   },
   'hero.subtitle': {
     en: 'OPPOSITE ALL SAINTS CHURCH, PLOT 50 - YOUR TRUSTED VETERINARY PARTNER',
@@ -82,6 +82,21 @@ const translations: Record<string, Record<Language, string>> = {
   'auth.nameRequired': { en: 'Full name is required', rk: 'Eizina niritekwa', rn: 'Eizina niritekwa' },
   'auth.checkEmail': { en: 'Check your email', rk: 'Kebera email yaawe', rn: 'Kebera email yaawe' },
   'auth.verifyEmail': { en: 'We sent you a verification link. Please check your inbox.', rk: 'Tukutumire link. Kebera email yaawe.', rn: 'Tukutumire link. Kebera email yaawe.' },
+  'auth.forgotPassword': { en: 'Forgot Password?', rk: 'Werekwa ekigambo?', rn: 'Werekwa ekigambo?' },
+  'auth.resetPassword': { en: 'Reset Password', rk: 'Hindura ekigambo', rn: 'Hindura ekigambo' },
+  'auth.resetPasswordDesc': { en: 'Enter your email address and we will send you a password reset link.', rk: 'Wandika email yaawe, tutumire link y\'okuhinduura ekigambo.', rn: 'Wandika email yaawe, tutumire link y\'okuhinduura ekigambo.' },
+  'auth.resetLinkSent': { en: 'Password reset link sent! Check your email.', rk: 'Link y\'okuhinduura ekigambo yatumibwa! Kebera email yaawe.', rn: 'Link y\'okuhinduura ekigambo yatumibwa! Kebera email yaawe.' },
+  'auth.newPassword': { en: 'New Password', rk: 'Ekigambo kihya', rn: 'Ekigambo kihya' },
+  'auth.confirmPassword': { en: 'Confirm Password', rk: 'Emeza ekigambo', rn: 'Emeza ekigambo' },
+  'auth.updatePassword': { en: 'Update Password', rk: 'Vugurura ekigambo', rn: 'Vugurura ekigambo' },
+  'auth.passwordUpdated': { en: 'Password updated successfully!', rk: 'Ekigambo kivugururiwe!', rn: 'Ekigambo kivugururiwe!' },
+  'auth.passwordMismatch': { en: 'Passwords do not match', rk: 'Ebigambo tibiganana', rn: 'Ebigambo tibiganana' },
+  'auth.adminSignup': { en: 'Admin Sign Up', rk: 'Yandikisa Omukozi', rn: 'Yandikisa Omukozi' },
+  'auth.inviteCode': { en: 'Admin Invite Code', rk: 'Koodi y\'omukozi', rn: 'Koodi y\'omukozi' },
+  'auth.inviteCodePlaceholder': { en: 'Enter admin invite code', rk: 'Wandika koodi y\'omukozi', rn: 'Wandika koodi y\'omukozi' },
+  'auth.inviteCodeInvalid': { en: 'Invalid invite code. Contact the super admin.', rk: 'Koodi si ya kuri. Korere omukozi mukuru.', rn: 'Koodi si ya kuri. Korere omukozi mukuru.' },
+  'auth.adminSignupSuccess': { en: 'Admin account created! Please check your email to verify.', rk: 'Akaunti y\'omukozi yakorwa! Kebera email yaawe.', rn: 'Akaunti y\'omukozi yakorwa! Kebera email yaawe.' },
+  'auth.backToLogin': { en: 'Back to Login', rk: 'Garuka Okwingira', rn: 'Garuka Okwingira' },
 
   // Chat extras
   'chat.loginRequired': { en: 'You need to create an account or login to start a consultation.', rk: 'Oteekwa kwandikisa nari okwingira okutandika okushabuurira.', rn: 'Oteekwa kwandikisa nari okwingira okutandika okushabuurira.' },
@@ -94,7 +109,7 @@ const translations: Record<string, Record<Language, string>> = {
   'admin.addProduct': { en: 'Add Product', rk: 'Ongeraho ekyokugurisha', rn: 'Ongeraho ekyokugurisha' },
 
   // Footer
-  'footer.rights': { en: '© 2026 Kigezi Vet Drugshop. All rights reserved.', rk: '© 2026 Kigezi Vet Drugshop. Oburenganzira bwona.', rn: '© 2026 Kigezi Vet Drugshop. Oburenganzira bwona.' },
+  'footer.rights': { en: '© 2026 Kigezi Vet - Digital Veterinary Consultation Service Platform. All rights reserved.', rk: '© 2026 Kigezi Vet. Oburenganzira bwona.', rn: '© 2026 Kigezi Vet. Oburenganzira bwona.' },
 
   // Testimonials
   'testimonials.title': { en: 'What Our Clients Say', rk: 'Ebi Abantu Bagamba', rn: 'Ebi Abantu Bagamba' },

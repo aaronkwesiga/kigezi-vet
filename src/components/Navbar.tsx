@@ -84,7 +84,7 @@ const Navbar = () => {
               Kigezi Vet
             </span>
             <span className="text-[7px] md:text-[9px] font-bold uppercase tracking-[0.2em] text-primary/60 mt-1 md:mt-1.5 flex items-center gap-1.5">
-              <Zap className="h-2.5 w-2.5 md:h-3.5 md:w-3.5 fill-secondary/40 text-secondary" /> Expert Hub
+              <Zap className="h-2.5 w-2.5 md:h-3.5 md:w-3.5 fill-secondary/40 text-secondary" /> Digital Vet Platform
             </span>
           </div>
         </Link>

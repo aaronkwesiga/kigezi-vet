@@ -14,7 +14,10 @@ const Footer = () => {
           <div className="space-y-6 md:space-y-8 flex flex-col items-center md:items-start">
             <div className="flex items-center gap-4 md:gap-6 mb-8 md:mb-10">
               <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-primary flex items-center justify-center font-bold text-primary-foreground text-xl md:text-2xl shadow-sm border border-white/10">K</div>
-              <h3 className="font-display text-lg md:text-xl font-bold text-foreground uppercase tracking-tight leading-none">Kigezi Vet Drugshop</h3>
+              <div className="flex flex-col">
+                <h3 className="font-display text-lg md:text-xl font-bold text-foreground uppercase tracking-tight leading-none">Kigezi Vet</h3>
+                <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-primary/50 mt-0.5">Digital Veterinary Consultation Platform</span>
+              </div>
             </div>
             <div className="flex items-start gap-4 md:gap-6 text-sm md:text-base font-medium text-foreground/42 leading-relaxed group">
               <MapPin className="mt-1 h-5 w-5 md:h-6 md:w-6 shrink-0 text-primary/40 group-hover:text-primary transition-all" />
@@ -44,7 +47,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-16 md:mt-24 border-t border-foreground/5 pt-10 md:pt-12 text-center text-[8px] md:text-[10px] font-black text-foreground/60 uppercase tracking-[0.2em] leading-relaxed">
-          &copy; {new Date().getFullYear()} KIGEZI VETERINARY DRUGSHOP. ALL DATA TRANSMISSIONS PROTECTED.
+          &copy; {new Date().getFullYear()} KIGEZI VET — DIGITAL VETERINARY CONSULTATION SERVICE PLATFORM. ALL RIGHTS RESERVED.
         </div>
       </div>
     </footer>
