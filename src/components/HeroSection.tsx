@@ -17,7 +17,7 @@ const HeroSection = () => {
       {/* Background is natural without color overlays */}
 
       <div className="container relative z-10 mx-auto text-center">
-        <div className="max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-1000">
+        <div className="max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-1000 bg-black/40 backdrop-blur-md p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.5)]">
           <Badge className="mb-6 md:mb-8 bg-white/10 text-white border border-white/20 px-6 md:px-8 py-2 md:py-3 text-[10px] md:text-xs font-semibold uppercase tracking-[0.2em] shadow-sm backdrop-blur-md">
             {t('hero.est', lang) || 'Est. 2024'}
           </Badge>

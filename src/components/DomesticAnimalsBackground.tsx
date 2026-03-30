@@ -56,11 +56,13 @@ const DomesticAnimalsBackground = () => {
 
             <style>{`
         @keyframes expandedSlideshow {
-          0% { opacity: 0; }
-          3.33% { opacity: 1; }       /* Fade in over 1s (1/30) */
-          20% { opacity: 1; }         /* Hold until next is in (5s interval + 1s fade) */
-          23.33% { opacity: 0; }      /* Fade out while next is ready */
-          100% { opacity: 0; }
+          0% { opacity: 0; z-index: 10; }
+          5% { opacity: 1; z-index: 10; }    /* Faded in completely */
+          25% { opacity: 1; z-index: 10; }   /* Stays on top */
+          25.1% { opacity: 1; z-index: 0; }  /* Drops to back */
+          30% { opacity: 1; z-index: 0; }    /* Stays fully opaque in back while next image fades in over it */
+          35% { opacity: 0; z-index: 0; }    /* Safely fades out now that it's covered */
+          100% { opacity: 0; z-index: 0; }
         }
       `}</style>
         </div>

@@ -64,14 +64,14 @@ const Contact = () => {
       {/* Background is natural without color overlays */}
 
       <div className="w-full max-w-5xl px-4 md:px-6 relative z-10 flex flex-col items-center mx-auto">
-        <div className="mb-14 text-center">
-          <Badge className="mb-5 px-8 py-2 text-[10px] md:text-xs font-semibold uppercase tracking-[0.2em] bg-primary/5 text-primary border border-primary/20 shadow-sm backdrop-blur-md">
+        <div className="mb-14 text-center bg-white/80 dark:bg-black/80 backdrop-blur-md py-8 px-10 rounded-3xl md:rounded-[3rem] shadow-xl border border-foreground/10 max-w-3xl">
+          <Badge className="mb-4 md:mb-6 bg-primary/10 text-primary hover:bg-primary/20 transition-colors border-none px-6 py-2 text-[10px] md:text-xs font-bold uppercase tracking-widest shadow-sm">
             {t('nav.contact', lang)}
           </Badge>
-          <h1 className="mb-5 font-display text-4xl font-bold tracking-tight text-foreground md:text-6xl lg:text-7xl uppercase leading-none">
+          <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter text-foreground uppercase leading-[0.9] mb-4 md:mb-6">
             {t('contact.title', lang)}
           </h1>
-          <p className="mx-auto max-w-xl text-lg font-medium text-foreground/42 md:text-xl leading-relaxed">
+          <p className="max-w-xl mx-auto text-sm md:text-base font-medium text-foreground/60 uppercase tracking-widest leading-relaxed px-4">
             {t('contact.subtitle', lang)}
           </p>
         </div>

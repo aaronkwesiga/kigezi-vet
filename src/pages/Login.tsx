@@ -148,8 +148,8 @@ const Login = () => {
       <ConsultationBackground />
 
       <div className="w-full max-w-4xl relative z-10 animate-in fade-in zoom-in duration-700">
-        {/* Header */}
-        <div className="mb-10 md:mb-14 text-center">
+        {/* Header securely readable on any background */}
+        <div className="text-center mb-8 bg-white/80 dark:bg-black/80 backdrop-blur-md py-6 px-10 rounded-3xl md:rounded-[3rem] shadow-xl max-w-2xl mx-auto border border-foreground/10">
           <div className="mx-auto mb-6 flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-xl md:rounded-2xl bg-primary shadow-xl border border-white/10">
             <ShieldCheck className="h-8 w-8 md:h-10 md:w-10 text-primary-foreground" />
           </div>

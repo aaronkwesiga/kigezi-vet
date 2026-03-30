@@ -12,7 +12,7 @@ import { format, isToday, isYesterday, startOfDay } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import EmojiPicker from 'emoji-picker-react';
+import EmojiPicker, { Theme as EmojiTheme } from 'emoji-picker-react';
 
 import { Video } from 'lucide-react';
 import ConsultationBackground from '@/components/ConsultationBackground';
@@ -448,8 +448,11 @@ const Chat = () => {
         {/* Background is natural without color overlays */}
 
         <div className="w-full max-w-3xl text-center relative z-10 animate-in fade-in zoom-in duration-1000">
-          <Badge className="mb-6 md:mb-10 px-8 md:px-12 py-2 md:py-3 bg-primary text-primary-foreground border-none font-black uppercase tracking-[0.4em] text-[9px] md:text-xs shadow-lg">Signal Interface</Badge>
-          <h1 className="text-3xl md:text-6xl lg:text-7xl font-black text-foreground uppercase tracking-tighter leading-none mb-6 md:mb-10 drop-shadow-sm">Direct <span className="text-primary">Uplink</span></h1>
+          {/* Header firmly readable anywhere */}
+          <div className="mb-8 bg-white/80 dark:bg-black/80 backdrop-blur-md py-6 px-10 rounded-3xl md:rounded-[3rem] shadow-xl max-w-2xl mx-auto border border-foreground/10">
+            <Badge className="mb-4 md:mb-6 px-8 md:px-12 py-2 md:py-3 bg-primary text-primary-foreground border-none font-black uppercase tracking-[0.4em] text-[9px] md:text-xs shadow-lg">Signal Interface</Badge>
+            <h1 className="text-3xl md:text-6xl lg:text-7xl font-black text-foreground uppercase tracking-tighter leading-none mb-2 drop-shadow-sm">Direct <span className="text-primary">Uplink</span></h1>
+          </div>
           <div className="glass rounded-[1.5rem] md:rounded-[4rem] p-6 md:p-14 shadow-xl">
             {/* Farmer identity card with avatar upload */}
             <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 mb-8 md:mb-14 p-4 md:p-10 bg-muted/30 rounded-xl md:rounded-[3rem] border-2 md:border-4 border-foreground/5">
@@ -666,7 +669,7 @@ const Chat = () => {
                 <PopoverContent side="top" align="start" className="w-auto p-0 border-none shadow-2xl mb-4 bg-transparent">
                   <EmojiPicker 
                     onEmojiClick={(e) => setInput(prev => prev + e.emoji)} 
-                    theme={theme === 'dark' ? 'dark' : 'light'}
+                    theme={theme === 'dark' ? EmojiTheme.DARK : EmojiTheme.LIGHT}
                     lazyLoadEmojis={true}
                   />
                 </PopoverContent>
