@@ -19,6 +19,7 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import InstallPrompt from "@/components/InstallPrompt";
+import ResetPassword from "./pages/ResetPassword";
 
 
 
@@ -52,6 +53,7 @@ const App = () => (
                       />
                       <Route path="/contact" element={<Contact />} />
                       <Route path="/login" element={<Login />} />
+                      <Route path="/reset-password" element={<ResetPassword />} />
                       <Route
                         path="/admin"
                         element={
