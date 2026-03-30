@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Lock, UserPlus, Mail, Key, User, ArrowRight,
-  ShieldCheck, Zap, RotateCcw, ChevronLeft, Hash, LogIn, KeyRound
+  ShieldCheck, Zap, RotateCcw, ChevronLeft, CheckCircle2
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -27,6 +27,7 @@ const Login = () => {
   const [farmerName, setFarmerName] = useState('');
   const [farmerLoading, setFarmerLoading] = useState(false);
   const [farmerMode, setFarmerMode] = useState<'login' | 'signup' | 'forgot'>('login');
+  const [farmerEmailSent, setFarmerEmailSent] = useState(false); // true after successful signup
 
   // ── Admin-login tab ─────────────────────────────────────────────────────────
   const [adminEmail, setAdminEmail] = useState('');
@@ -67,8 +68,13 @@ const Login = () => {
       }
       const { data, error } = await signUp(farmerEmail, farmerPassword, farmerName.trim());
       setFarmerLoading(false);
-      if (error) { toast({ title: 'Error', description: error.message, variant: 'destructive' }); }
-      else { toast({ title: t('auth.checkEmail', lang), description: t('auth.verifyEmail', lang) }); }
+      if (error) {
+        toast({ title: 'Error', description: error.message, variant: 'destructive' });
+      } else {
+        // Show dedicated email-verification screen and clear sensitive fields
+        setFarmerEmailSent(true);
+        setFarmerPassword('');
+      }
     } else {
       const { error } = await signIn(farmerEmail, farmerPassword);
       setFarmerLoading(false);
@@ -192,86 +198,129 @@ const Login = () => {
               {/* ═══════════════ FARMER TAB ═══════════════ */}
               <TabsContent value="farmer" className="mt-0 space-y-8 animate-in fade-in slide-in-from-left-5 duration-700">
 
-                {/* Login / Signup / ForgotPassword sub-toggle */}
-                {farmerMode !== 'forgot' && (
-                  <div className="flex p-1.5 bg-muted rounded-xl md:rounded-[3rem] mb-6 border border-foreground/5 h-12 md:h-14">
-                    {(['login', 'signup'] as const).map(m => (
-                      <button key={m} onClick={() => setFarmerMode(m)}
-                        className={`flex-1 text-[10px] md:text-xs font-bold uppercase tracking-widest rounded-lg md:rounded-[2.5rem] transition-all
-                          ${farmerMode === m ? 'bg-background text-foreground shadow-md border border-foreground/10' : 'text-foreground/30 hover:text-foreground'}`}>
-                        {m === 'login' ? t('auth.login', lang) : t('auth.signup', lang)}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                <form onSubmit={handleFarmerSubmit} className="space-y-6">
-                  <div className="mb-6 text-left">
-                    <h2 className="text-2xl md:text-3xl font-bold text-foreground uppercase tracking-tight mb-1">
-                      {farmerMode === 'forgot' ? t('auth.resetPassword', lang) : 'Farmer Portal'}
-                    </h2>
-                    <p className="text-[10px] md:text-xs font-medium text-foreground/40 uppercase tracking-widest">
-                      {farmerMode === 'forgot'
-                        ? t('auth.resetPasswordDesc', lang)
-                        : 'Authorization required for service access'}
-                    </p>
-                  </div>
-
-                  {/* Name field (signup only) */}
-                  {farmerMode === 'signup' && (
-                    <div className="space-y-2.5">
-                      <label className={labelCls}>Full Name</label>
-                      <div className="relative">
-                        <User className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/10" />
-                        <Input value={farmerName} onChange={e => setFarmerName(e.target.value)}
-                          placeholder="ENTER FULL NAME" className={inputCls} required />
-                      </div>
+                {/* ── Email-sent confirmation screen ─────────────────── */}
+                {farmerEmailSent ? (
+                  <div className="flex flex-col items-center text-center gap-6 py-4">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 shadow-xl">
+                      <CheckCircle2 className="h-10 w-10 text-primary" />
                     </div>
-                  )}
-
-                  {/* Email */}
-                  <div className="space-y-2.5">
-                    <label className={labelCls}>Email Address</label>
-                    <div className="relative">
-                      <Mail className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/10" />
-                      <Input type="email" value={farmerEmail} onChange={e => setFarmerEmail(e.target.value.toLowerCase())}
-                        placeholder="your@email.com" className={inputCls} required />
+                    <div>
+                      <h2 className="text-2xl md:text-3xl font-bold text-foreground uppercase tracking-tight mb-2">
+                        {t('auth.checkEmail', lang)}
+                      </h2>
+                      <p className="text-sm font-medium text-foreground/60 max-w-sm mx-auto leading-relaxed">
+                        {t('auth.verifyEmail', lang)}
+                      </p>
+                      <p className="mt-3 text-xs font-bold uppercase tracking-widest text-primary/70">
+                        {farmerEmail}
+                      </p>
                     </div>
-                  </div>
-
-                  {/* Password (login / signup only) */}
-                  {farmerMode !== 'forgot' && (
-                    <div className="space-y-2.5">
-                      <label className={labelCls}>Password</label>
-                      <div className="relative">
-                        <Key className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/10" />
-                        <Input type="password" value={farmerPassword} onChange={e => setFarmerPassword(e.target.value)}
-                          placeholder="••••••••" className={inputCls} required minLength={6} />
-                      </div>
-                      {farmerMode === 'login' && (
-                        <button type="button"
-                          onClick={() => { setFarmerMode('forgot'); }}
-                          className="ml-4 text-[10px] font-bold uppercase tracking-widest text-primary/60 hover:text-primary transition-colors">
-                          {t('auth.forgotPassword', lang)}
-                        </button>
-                      )}
+                    <div className="w-full rounded-xl bg-primary/5 border border-primary/10 p-4 text-left space-y-2">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/40">Next steps</p>
+                      <ol className="list-decimal list-inside space-y-1.5 text-xs text-foreground/60 font-medium">
+                        <li>Open the verification email we just sent you.</li>
+                        <li>Click the confirmation link inside.</li>
+                        <li>Come back here and log in.</li>
+                      </ol>
                     </div>
-                  )}
-
-                  {submitBtn(farmerLoading,
-                    farmerMode === 'forgot' ? t('auth.resetPassword', lang)
-                      : farmerMode === 'signup' ? t('auth.signup', lang)
-                        : t('auth.login', lang))}
-
-                  {/* Back from forgot */}
-                  {farmerMode === 'forgot' && (
-                    <button type="button"
-                      onClick={() => { setFarmerMode('login'); setFarmerEmail(''); }}
-                      className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-foreground/40 hover:text-foreground transition-colors mx-auto">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFarmerEmailSent(false);
+                        setFarmerMode('login');
+                        setFarmerName('');
+                        setFarmerPassword('');
+                      }}
+                      className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-foreground/40 hover:text-foreground transition-colors"
+                    >
                       <ChevronLeft className="h-3.5 w-3.5" /> {t('auth.backToLogin', lang)}
                     </button>
-                  )}
-                </form>
+                  </div>
+
+                ) : (
+                  <>
+                    {/* Login / Signup / ForgotPassword sub-toggle */}
+                    {farmerMode !== 'forgot' && (
+                      <div className="flex p-1.5 bg-muted rounded-xl md:rounded-[3rem] mb-6 border border-foreground/5 h-12 md:h-14">
+                        {(['login', 'signup'] as const).map(m => (
+                          <button key={m} onClick={() => setFarmerMode(m)}
+                            className={`flex-1 text-[10px] md:text-xs font-bold uppercase tracking-widest rounded-lg md:rounded-[2.5rem] transition-all
+                              ${farmerMode === m ? 'bg-background text-foreground shadow-md border border-foreground/10' : 'text-foreground/30 hover:text-foreground'}`}>
+                            {m === 'login' ? t('auth.login', lang) : t('auth.signup', lang)}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    <form onSubmit={handleFarmerSubmit} className="space-y-6">
+                      <div className="mb-6 text-left">
+                        <h2 className="text-2xl md:text-3xl font-bold text-foreground uppercase tracking-tight mb-1">
+                          {farmerMode === 'forgot' ? t('auth.resetPassword', lang) : 'Farmer Portal'}
+                        </h2>
+                        <p className="text-[10px] md:text-xs font-medium text-foreground/40 uppercase tracking-widest">
+                          {farmerMode === 'forgot'
+                            ? t('auth.resetPasswordDesc', lang)
+                            : 'Authorization required for service access'}
+                        </p>
+                      </div>
+
+                      {/* Name field (signup only) */}
+                      {farmerMode === 'signup' && (
+                        <div className="space-y-2.5">
+                          <label className={labelCls}>Full Name</label>
+                          <div className="relative">
+                            <User className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/10" />
+                            <Input value={farmerName} onChange={e => setFarmerName(e.target.value)}
+                              placeholder="ENTER FULL NAME" className={inputCls} required />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Email */}
+                      <div className="space-y-2.5">
+                        <label className={labelCls}>Email Address</label>
+                        <div className="relative">
+                          <Mail className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/10" />
+                          <Input type="email" value={farmerEmail} onChange={e => setFarmerEmail(e.target.value.toLowerCase())}
+                            placeholder="your@email.com" className={inputCls} required />
+                        </div>
+                      </div>
+
+                      {/* Password (login / signup only) */}
+                      {farmerMode !== 'forgot' && (
+                        <div className="space-y-2.5">
+                          <label className={labelCls}>Password</label>
+                          <div className="relative">
+                            <Key className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/10" />
+                            <Input type="password" value={farmerPassword} onChange={e => setFarmerPassword(e.target.value)}
+                              placeholder="••••••••" className={inputCls} required minLength={6} />
+                          </div>
+                          {farmerMode === 'login' && (
+                            <button type="button"
+                              onClick={() => { setFarmerMode('forgot'); }}
+                              className="ml-4 text-[10px] font-bold uppercase tracking-widest text-primary/60 hover:text-primary transition-colors">
+                              {t('auth.forgotPassword', lang)}
+                            </button>
+                          )}
+                        </div>
+                      )}
+
+                      {submitBtn(farmerLoading,
+                        farmerMode === 'forgot' ? t('auth.resetPassword', lang)
+                          : farmerMode === 'signup' ? t('auth.signup', lang)
+                            : t('auth.login', lang))}
+
+                      {/* Back from forgot */}
+                      {farmerMode === 'forgot' && (
+                        <button type="button"
+                          onClick={() => { setFarmerMode('login'); setFarmerEmail(''); }}
+                          className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-foreground/40 hover:text-foreground transition-colors mx-auto">
+                          <ChevronLeft className="h-3.5 w-3.5" /> {t('auth.backToLogin', lang)}
+                        </button>
+                      )}
+                    </form>
+                  </>
+                )}
               </TabsContent>
 
               {/* ═══════════════ ADMIN LOGIN TAB ═══════════════ */}
